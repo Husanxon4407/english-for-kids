@@ -14,6 +14,15 @@ npm run build    # production build in dist/
 In WebStorm, run the `dev` script from `package.json` (or the "WordLand (dev
 server)" run configuration). Don't run `.jsx` files directly with Node.
 
+## Publish
+
+```bash
+npm run deploy   # builds and pushes the site to the gh-pages branch
+```
+
+Live at https://husanxon4407.github.io/english-for-kids/ (GitHub Pages,
+source: "Deploy from a branch" → `gh-pages` / root).
+
 ## Voice
 
 Every line Bobo says is a recorded MP3 in `public/audio/voice/`, generated
