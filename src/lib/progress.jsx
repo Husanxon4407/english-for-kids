@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { MEDAL_RANK } from './settings.js'
 
 // Progress lives in this browser's localStorage. That is fine for a
 // single-device prototype, but it is not a secure or synced account system.
@@ -14,6 +15,8 @@ const EMPTY = {
   words: {},
   // How many times each activity was completed, e.g. { 'animals:listen': 2 }.
   activities: {},
+  // Best Star-challenge medal per world, e.g. { animals: 'silver' }.
+  medals: {},
   settings: { difficulty: 'explorer', sound: true, voiceSpeed: 'normal' },
 }
 
@@ -97,6 +100,11 @@ export function ProgressProvider({ children }) {
         })),
       recordActivity: (id) =>
         update((p) => ({ ...p, activities: { ...p.activities, [id]: (p.activities[id] || 0) + 1 } })),
+      // Keeps the best medal: a later, weaker result never takes one away.
+      recordMedal: (worldId, medal) =>
+        update((p) =>
+          MEDAL_RANK[medal] > (MEDAL_RANK[p.medals[worldId]] || 0) ? { ...p, medals: { ...p.medals, [worldId]: medal } } : p,
+        ),
       setSetting: (key, value) => update((p) => ({ ...p, settings: { ...p.settings, [key]: value } })),
       // Clears this child's stars and word progress but keeps their settings.
       resetProgress: () => update((p) => ({ ...EMPTY, settings: p.settings })),

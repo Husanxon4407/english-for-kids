@@ -27,6 +27,9 @@ export const SCRIPT = {
     learn: 'Learn the words!',
     listen: 'Listen and tap!',
     match: "Let's match!",
+    memory: 'Memory game!',
+    puzzle: 'Puzzle time!',
+    quiz: 'Star challenge!',
   },
 
   // Learn a word
@@ -51,6 +54,21 @@ export const SCRIPT = {
   matchTapFirst: {
     shadow: 'Tap a picture first. Then tap its shadow!',
     color: 'Tap a paint first. Then tap its star!',
+  },
+
+  // Memory cards
+  memoryIntro: ['Memory game!', 'Find two the same!'],
+
+  // Puzzle
+  puzzleIntro: ['Puzzle time!', 'Fix the picture!'],
+
+  // Star challenge: one try per word, a medal at the end — never a bad result.
+  quizIntro: ['Star challenge!', 'Listen and tap!'],
+  quizLook: 'Look!',
+  medal: {
+    gold: 'You won a gold medal!',
+    silver: 'You won a silver medal!',
+    bronze: 'You won a bronze medal!',
   },
 
   // End of a game

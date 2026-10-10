@@ -224,6 +224,12 @@ function WorldProgress({ world, progress }) {
           <span>Learn: {activities[`${world.id}:learn`] || 0}×</span>
           <span>Listen and tap: {activities[`${world.id}:listen`] || 0}×</span>
           <span>Match: {activities[`${world.id}:match`] || 0}×</span>
+          <span>Memory: {activities[`${world.id}:memory`] || 0}×</span>
+          <span>Puzzle: {activities[`${world.id}:puzzle`] || 0}×</span>
+          <span>
+            Star challenge: {activities[`${world.id}:quiz`] || 0}×
+            {progress.medals[world.id] ? ` — best medal: ${progress.medals[world.id]}` : ''}
+          </span>
         </div>
 
         <ul className="mt-4 divide-y divide-slate-100">

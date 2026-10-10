@@ -2,8 +2,23 @@ import { animalArt } from './art/animals.jsx'
 import { fruitArt } from './art/fruits.jsx'
 import { colorArt } from './art/colors.jsx'
 import { toyArt } from './art/toys.jsx'
+import { homeArt } from './art/home.jsx'
+import { bodyArt } from './art/body.jsx'
+import { numberArt } from './art/numbers.jsx'
+import { shapeArt } from './art/shapes.jsx'
+import { skyArt } from './art/sky.jsx'
 
-const ART = { ...animalArt, ...fruitArt, ...colorArt, ...toyArt }
+const ART = {
+  ...animalArt,
+  ...fruitArt,
+  ...colorArt,
+  ...toyArt,
+  ...homeArt,
+  ...bodyArt,
+  ...numberArt,
+  ...shapeArt,
+  ...skyArt,
+}
 
 /**
  * Picture for any vocabulary item, by id. All drawings share a 200x200

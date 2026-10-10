@@ -40,6 +40,9 @@ export const chime = () => play([[660, 0, 0.18], [880, 0.1, 0.2], [1320, 0.2, 0.
 /** Picking something up / selecting. */
 export const pop = () => play([[520, 0, 0.12, 0.1, 'triangle']])
 
+/** Turning a card over. */
+export const flip = () => play([[392, 0, 0.09, 0.08, 'triangle'], [587, 0.05, 0.1, 0.07, 'triangle']])
+
 /** End of a game. */
 export const fanfare = () =>
   play([[523, 0, 0.2], [659, 0.15, 0.2], [784, 0.3, 0.2], [1047, 0.45, 0.5, 0.1]])

@@ -5,6 +5,9 @@ import World from './pages/World.jsx'
 import LearnWord from './pages/LearnWord.jsx'
 import ListenAndTap from './games/ListenAndTap.jsx'
 import MatchGame from './games/MatchGame.jsx'
+import MemoryGame from './games/MemoryGame.jsx'
+import PuzzleGame from './games/PuzzleGame.jsx'
+import StarQuiz from './games/StarQuiz.jsx'
 import ParentCorner from './pages/ParentCorner.jsx'
 import GrownUpsGate from './components/GrownUpsGate.jsx'
 import { getWorld } from './data/worlds.js'
@@ -66,6 +69,12 @@ export default function App() {
       return <ListenAndTap world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
     case 'match':
       return <MatchGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
+    case 'memory':
+      return <MemoryGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
+    case 'puzzle':
+      return <PuzzleGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
+    case 'quiz':
+      return <StarQuiz world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
     case 'learn':
       return (
         <LearnWord

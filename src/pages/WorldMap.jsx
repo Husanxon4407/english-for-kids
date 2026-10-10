@@ -57,8 +57,8 @@ export default function WorldMap({ onHome, onOpenWorld, onPractice }) {
         <StarCounter />
         <Mascot size="sm" talking={speaking} onClick={() => speak(SCRIPT.mapPrompt)} />
       </TopBar>
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center p-4 sm:p-6">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center p-4 sm:p-6 lg:max-w-7xl">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-5">
           {worlds.map((world) => (
             <WorldCard key={world.id} world={world} available={Boolean(world.items)} onClick={() => open(world)} />
           ))}

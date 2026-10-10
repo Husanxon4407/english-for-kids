@@ -2,13 +2,6 @@ import ItemArt from './ItemArt.jsx'
 
 // Pictures for worlds that are not built yet.
 const SOON = {
-  home: (
-    <>
-      <path d="M20 52 L60 18 L100 52" fill="none" stroke="#3b82f6" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="30" y="50" width="60" height="42" rx="4" fill="#93c5fd" />
-      <rect x="52" y="64" width="16" height="28" rx="3" fill="#1d4ed8" />
-    </>
-  ),
   island: (
     <>
       <ellipse cx="60" cy="86" rx="50" ry="10" fill="#7dd3fc" />

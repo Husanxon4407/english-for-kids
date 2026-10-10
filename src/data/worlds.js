@@ -2,6 +2,11 @@ import { animals } from './animals.js'
 import { fruits } from './fruits.js'
 import { colors } from './colors.js'
 import { toys } from './toys.js'
+import { home } from './home.js'
+import { body } from './body.js'
+import { numbers } from './numbers.js'
+import { shapes } from './shapes.js'
+import { sky } from './sky.js'
 
 // The world map. Worlds with `items` are playable; the rest show as
 // "coming soon" so the map already hints at the bigger adventure.
@@ -63,7 +68,76 @@ export const worlds = [
       'Combine with colors: “Give me the red ball.”',
     ],
   },
-  { id: 'home', name: 'My Little Home', color: '#60a5fa' },
+  {
+    id: 'home',
+    name: 'My Little Home',
+    intro: "Welcome to My Little Home! Let's look around!",
+    learnDone: ['Wow!', 'You know the whole house!'],
+    color: '#60a5fa',
+    items: home,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Walk around the house and touch things together: “Door!” “Bed!”',
+      'Play “Find the chair!” — the child runs to it, then gives you a turn.',
+      'At bedtime, say good night to the room: “Good night, lamp!”',
+    ],
+  },
+  {
+    id: 'body',
+    name: 'My Body',
+    intro: "Welcome to My Body! Let's move together!",
+    learnDone: ['Great job!', 'You know your body!'],
+    color: '#f472b6',
+    items: body,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Play “Touch your nose!” — go faster and faster until everyone laughs.',
+      'Let the child be the leader and give you the instructions.',
+      'While washing hands or faces, name each part together.',
+    ],
+  },
+  {
+    id: 'numbers',
+    name: 'Number Hill',
+    intro: "Welcome to Number Hill! Let's count the stars!",
+    learnDone: ['Fantastic!', 'You can count to six!'],
+    color: '#fb923c',
+    items: numbers,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Count stairs, spoons or toys out loud together, up to six.',
+      '“Bring me three toys!” — count them together when they arrive.',
+      'Hold up fingers and ask: “How many?”',
+    ],
+  },
+  {
+    id: 'shapes',
+    name: 'Shape Castle',
+    intro: "Welcome to Shape Castle! Let's meet the shapes!",
+    learnDone: ['Super!', 'You know all the shapes!'],
+    color: '#818cf8',
+    items: shapes,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Shape hunt: find a circle in the kitchen — a plate, a lid, a clock.',
+      'Draw big shapes together and name them as you go.',
+      'Cut a sandwich into a square or a triangle and ask which one it is.',
+    ],
+  },
+  {
+    id: 'sky',
+    name: 'Sunny Sky',
+    intro: "Welcome to Sunny Sky! Let's look up!",
+    learnDone: ['Beautiful!', 'You know the sky!'],
+    color: '#38bdf8',
+    items: sky,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Look out of the window each morning: “Sun? Rain? Cloud?”',
+      'At night, find the moon together and say “Good night, moon!”',
+      'Draw today’s weather and name it.',
+    ],
+  },
   { id: 'island', name: 'Adventure Island', color: '#2dd4bf' },
 ]
 
