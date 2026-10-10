@@ -14,6 +14,7 @@ import { getDifficulty, medalFor } from '../lib/settings.js'
 import { chime, fanfare } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 function buildQuestions(items, choices) {
   return shuffle(items).map((target) => {
@@ -84,9 +85,10 @@ export default function StarQuiz({ world, onBack, onHome }) {
 
   const { target, options } = questions[qIndex]
   const ask = () => speak(target.prompt)
+  const uz = useUzbek()
 
   useEffect(() => {
-    speak(qIndex === 0 ? [...SCRIPT.quizIntro, target.prompt] : target.prompt)
+    speak(qIndex === 0 ? [...SCRIPT.quizIntro, ...uz.line('quiz'), target.prompt] : target.prompt)
   }, [qIndex, round])
 
   async function choose(option) {

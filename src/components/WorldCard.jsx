@@ -1,7 +1,24 @@
 import ItemArt from './ItemArt.jsx'
 
-// Pictures for worlds that are not built yet.
+// Pictures for worlds that are not built yet, and for the two special places.
 const SOON = {
+  stories: (
+    <>
+      <path d="M60 30 C44 18 24 16 10 20 L10 82 C24 78 44 80 60 92 Z" fill="#fff" stroke="#b45309" strokeWidth="4" strokeLinejoin="round" />
+      <path d="M60 30 C76 18 96 16 110 20 L110 82 C96 78 76 80 60 92 Z" fill="#fef3c7" stroke="#b45309" strokeWidth="4" strokeLinejoin="round" />
+      <path d="M22 36 Q36 34 48 40 M22 50 Q36 48 48 54 M22 64 Q36 62 48 68" fill="none" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
+      <path d="M85 36 l4.5 9.5 10.5 1.2 -7.8 7 2.2 10.3 -9.4 -5.3 -9.4 5.3 2.2 -10.3 -7.8 -7 10.5 -1.2 z" fill="#fbbf24" stroke="#d97706" strokeWidth="2.5" strokeLinejoin="round" />
+    </>
+  ),
+  songs: (
+    <>
+      <path d="M44 74 L44 26 L92 16 L92 64" fill="none" stroke="#be185d" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M44 40 L92 30" stroke="#be185d" strokeWidth="7" strokeLinecap="round" />
+      <ellipse cx="33" cy="76" rx="14" ry="11" fill="#ec4899" stroke="#be185d" strokeWidth="4" />
+      <ellipse cx="81" cy="66" rx="14" ry="11" fill="#ec4899" stroke="#be185d" strokeWidth="4" />
+      <path d="M14 24 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z M106 78 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4 z" fill="#fbbf24" />
+    </>
+  ),
   island: (
     <>
       <ellipse cx="60" cy="86" rx="50" ry="10" fill="#7dd3fc" />

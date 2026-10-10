@@ -12,6 +12,7 @@ import { getDifficulty } from '../lib/settings.js'
 import { chime, flip } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 // How long two different cards stay open before they turn back over.
 const LOOK_TIME = 900
@@ -39,9 +40,11 @@ export default function MemoryGame({ world, onBack, onHome }) {
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
   const { speaking, speak } = useSpeaker()
+  const uz = useUzbek()
+  const intro = [...SCRIPT.memoryIntro, ...uz.line('memory')]
 
   useEffect(() => {
-    speak(SCRIPT.memoryIntro)
+    speak(intro)
   }, [round])
 
   async function turn(card) {
@@ -95,7 +98,7 @@ export default function MemoryGame({ world, onBack, onHome }) {
     <div className="flex min-h-dvh flex-col">
       <TopBar onBack={onBack} onHome={onHome}>
         <StarCounter />
-        <Mascot size="sm" talking={speaking} onClick={() => speak(SCRIPT.memoryIntro)} />
+        <Mascot size="sm" talking={speaking} onClick={() => speak(intro)} />
       </TopBar>
 
       <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-6 px-4 pb-6">

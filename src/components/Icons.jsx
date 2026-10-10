@@ -50,6 +50,13 @@ export const PlayIcon = (p) => (
   </Icon>
 )
 
+export const PauseIcon = (p) => (
+  <Icon {...p}>
+    <rect x="6" y="4.5" width="4" height="15" rx="1.2" fill="currentColor" />
+    <rect x="14" y="4.5" width="4" height="15" rx="1.2" fill="currentColor" />
+  </Icon>
+)
+
 export const NoteIcon = (p) => (
   <Icon {...p}>
     <path d="M9 18V5l11-2v13" />
@@ -62,6 +69,13 @@ export const MouthIcon = (p) => (
   <Icon {...p}>
     <path d="M3 11c3-3 6-3 9-1 3-2 6-2 9 1-2 5-5 7-9 7s-7-2-9-7z" />
     <path d="M6 11.5c4 2 8 2 12 0" />
+  </Icon>
+)
+
+export const BookIcon = (p) => (
+  <Icon {...p}>
+    <path d="M12 6c-2-1.6-5-2-8-1.5v13c3-.5 6-.1 8 1.5 2-1.6 5-2 8-1.5v-13c-3-.5-6-.1-8 1.5z" />
+    <path d="M12 6v13" />
   </Icon>
 )
 

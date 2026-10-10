@@ -14,9 +14,11 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { KokoroTTS } from 'kokoro-js'
-import { Mp3Encoder } from '@breezystack/lamejs'
+import { toMp3, trimSilence } from './lib/audio-file.mjs'
 import { worlds } from '../src/data/worlds.js'
 import { PRAISE, SCRIPT, voiceKey } from '../src/data/script.js'
+import { stories } from '../src/data/stories.js'
+import { songs } from '../src/data/songs.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUT_DIR = path.join(root, 'public', 'audio', 'voice')
@@ -59,39 +61,19 @@ function collectLines() {
       if (item.sound) add(SCRIPT.says(item))
     }
   }
+
+  for (const story of stories) {
+    add(SCRIPT.title(story))
+    for (const scene of [...story.scenes, story.ending]) add([scene.lines, scene.prompt, scene.reward])
+  }
+  for (const song of songs) {
+    add(SCRIPT.title(song))
+  }
   return [...lines]
 }
 
 // ---------------------------------------------------------------------------
-// 2. Audio helpers: trim silence, encode to MP3.
-function trimSilence(samples, rate) {
-  const threshold = 0.01
-  let start = 0
-  let end = samples.length - 1
-  while (start < end && Math.abs(samples[start]) < threshold) start++
-  while (end > start && Math.abs(samples[end]) < threshold) end--
-  const before = Math.round(rate * 0.04)
-  const after = Math.round(rate * 0.12)
-  return samples.subarray(Math.max(0, start - before), Math.min(samples.length, end + after))
-}
-
-function toMp3(samples, rate) {
-  const pcm = new Int16Array(samples.length)
-  for (let i = 0; i < samples.length; i++) {
-    const s = Math.max(-1, Math.min(1, samples[i]))
-    pcm[i] = s < 0 ? s * 0x8000 : s * 0x7fff
-  }
-  const encoder = new Mp3Encoder(1, rate, 64)
-  const chunks = []
-  for (let i = 0; i < pcm.length; i += 1152) {
-    const out = encoder.encodeBuffer(pcm.subarray(i, i + 1152))
-    if (out.length) chunks.push(Buffer.from(out))
-  }
-  const end = encoder.flush()
-  if (end.length) chunks.push(Buffer.from(end))
-  return Buffer.concat(chunks)
-}
-
+// 2. File names.
 function fileNameFor(text) {
   const slug = voiceKey(text)
     .replace(/[^a-z0-9]+/g, '-')

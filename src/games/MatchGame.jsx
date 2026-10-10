@@ -12,6 +12,7 @@ import { getDifficulty } from '../lib/settings.js'
 import { chime, pop } from '../lib/sfx.js'
 import { chunk, praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 // How far the finger must move before a press counts as a drag, not a tap.
 const DRAG_THRESHOLD = 12
@@ -46,7 +47,8 @@ export default function MatchGame({ world, onBack, onHome }) {
 
   const board = boards[boardIndex]
   const style = world.matchStyle || 'shadow'
-  const intro = SCRIPT.matchIntro[style]
+  const uz = useUzbek()
+  const intro = [...SCRIPT.matchIntro[style], ...uz.line(style === 'color' ? 'matchColor' : 'matchShadow')]
   const totalPairs = world.items.length
   const matchedSoFar = boardIndex * pairs + matched.length
   // Two pairs per board sit in two wider columns; three in three.

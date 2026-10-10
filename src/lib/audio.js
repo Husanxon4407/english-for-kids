@@ -173,6 +173,8 @@ async function speakOne(text, options = {}) {
       // The recording is missing or broken — use the browser voice instead.
     }
   }
+  // Clips with no English text (the Uzbek helper) have nothing to fall back to.
+  if (!text) return
   await speakWithSynthesis(text, options)
 }
 

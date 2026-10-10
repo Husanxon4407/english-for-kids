@@ -8,3 +8,11 @@ export const numbers = [
   { id: 'five', word: 'five', count: 5, hex: '#a855f7', phrase: 'Five stars!', prompt: 'Find number five!', color: '#f3e8ff' },
   { id: 'six', word: 'six', count: 6, hex: '#ec4899', phrase: 'Six stars!', prompt: 'Find number six!', color: '#fce7f3' },
 ]
+
+// Seven to ten are not taught in Number Hill yet, but the number song sings them.
+export const songNumbers = [
+  { id: 'seven', word: 'seven', count: 7, hex: '#14b8a6', color: '#ccfbf1' },
+  { id: 'eight', word: 'eight', count: 8, hex: '#eab308', color: '#fef9c3' },
+  { id: 'nine', word: 'nine', count: 9, hex: '#6366f1', color: '#e0e7ff' },
+  { id: 'ten', word: 'ten', count: 10, hex: '#ef4444', color: '#fee2e2' },
+]

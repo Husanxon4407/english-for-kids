@@ -4,3 +4,7 @@ dist/
 .idea/shelf/
 *.log
 .DS_Store
+
+# Private keys (Azure Speech for the Uzbek voice)
+.env.local
+.env*.local

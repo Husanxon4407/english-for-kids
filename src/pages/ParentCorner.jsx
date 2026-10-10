@@ -8,6 +8,8 @@ import { WORD_STATES, parentNote, wordState } from '../lib/wordState.js'
 import { wordsDueCount } from '../lib/review.js'
 import { say } from '../lib/audio.js'
 import { worlds } from '../data/worlds.js'
+import { songs } from '../data/songs.js'
+import { UZBEK_AVAILABLE } from '../lib/uzbek.js'
 import { SCRIPT } from '../data/script.js'
 
 const MAX_PROFILES = 4
@@ -283,6 +285,26 @@ function WorldProgress({ world, progress }) {
   )
 }
 
+function MusicCredits() {
+  return (
+    <Card title="Song credits">
+      <p className="text-sm text-slate-500">
+        The songs in Song Time are from Pixabay Music and are used under the Pixabay Content License. Thank you to the artists:
+      </p>
+      <ul className="mt-2 space-y-1 text-base">
+        {songs.map((song) => (
+          <li key={song.id}>
+            <span className="font-bold">{song.title}</span> — {song.credit.artist}{' '}
+            <a className="text-sm text-sky-600 underline" href={song.credit.url} target="_blank" rel="noreferrer noopener">
+              source
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  )
+}
+
 // --- Page -------------------------------------------------------------------
 export default function ParentCorner({ onBack }) {
   const { progress, activeProfile, setSetting, resetProgress } = useProgress()
@@ -336,6 +358,22 @@ export default function ParentCorner({ onBack }) {
           <p className="mt-2 text-sm text-slate-500">
             Not tied to age — switch any time. Easier is fine whenever a child wants it.
           </p>
+
+          {UZBEK_AVAILABLE && (
+            <>
+          <h3 className="mb-2 mt-6 font-bold">Language help</h3>
+          <div role="radiogroup" aria-label="Language help" className="grid grid-cols-2 gap-3">
+            <Choice selected={settings.helper !== 'uz'} onClick={() => setSetting('helper', 'off')}>
+              <span className="block font-bold">English only</span>
+              <span className="block text-sm text-slate-500">Bobo speaks only English.</span>
+            </Choice>
+            <Choice selected={settings.helper === 'uz'} onClick={() => setSetting('helper', 'uz')}>
+              <span className="block font-bold">O‘zbekcha yordam</span>
+              <span className="block text-sm text-slate-500">New words and instructions are also said in Uzbek.</span>
+            </Choice>
+          </div>
+            </>
+          )}
 
           <h3 className="mb-2 mt-6 font-bold">Sound</h3>
           <div role="radiogroup" aria-label="Sound" className="grid grid-cols-2 gap-3">
@@ -404,6 +442,7 @@ export default function ParentCorner({ onBack }) {
           Privacy: WordLand saves progress only in this browser on this device. Nothing is uploaded, there are no
           accounts, ads or tracking, and no voice is recorded.
         </p>
+        <MusicCredits />
       </main>
     </div>
   )

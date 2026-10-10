@@ -7,15 +7,27 @@ import StarCounter from '../components/StarCounter.jsx'
 import { SCRIPT } from '../data/script.js'
 import ItemArt from '../components/ItemArt.jsx'
 import { useProgress } from '../lib/progress.jsx'
+import { UZBEK_AVAILABLE, useUzbek } from '../lib/uzbek.js'
+import { say } from '../lib/audio.js'
+import { UZ_LINES } from '../data/uzbek.js'
+import uzManifest from '../data/voice-manifest-uz.json'
 
 export default function Home({ onPlay, onGrownUps }) {
   const { speaking, speak } = useSpeaker()
-  const { profiles, activeProfile } = useProgress()
+  const { profiles, activeProfile, setSetting } = useProgress()
+  const uz = useUzbek()
   const [greeted, setGreeted] = useState(false)
 
   function greet() {
     setGreeted(true)
-    speak(SCRIPT.homeGreeting)
+    speak([...SCRIPT.homeGreeting, ...uz.line('home')])
+  }
+
+  // Turning the helper on answers in Uzbek straight away, so it is obvious what the switch does.
+  function toggleUzbek() {
+    setSetting('helper', uz.on ? 'off' : 'uz')
+    const file = uzManifest.lines?.[UZ_LINES.home]
+    if (!uz.on && file) say('', { src: import.meta.env.BASE_URL + file })
   }
 
   async function play() {
@@ -52,6 +64,21 @@ export default function Home({ onPlay, onGrownUps }) {
       <RoundButton label="Play" color="green" size="lg" onClick={play} className="animate-bounce-in">
         <PlayIcon className="ml-2 h-16 w-16 sm:h-20 sm:w-20" />
       </RoundButton>
+
+      {UZBEK_AVAILABLE && (
+      <button
+        type="button"
+        onClick={toggleUzbek}
+        aria-pressed={uz.on}
+        aria-label="O‘zbekcha yordam"
+        className={`absolute bottom-4 left-4 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold shadow-sm transition-colors sm:bottom-6 sm:left-6 ${
+          uz.on ? 'bg-sky-500 text-white' : 'bg-white/70 text-slate-500'
+        }`}
+      >
+        <span className={`h-3 w-3 rounded-full ${uz.on ? 'bg-lime-300' : 'bg-slate-300'}`} />
+        O‘zbekcha
+      </button>
+      )}
 
       {/* Small and quiet on purpose: this is for adults, and it's protected by a reading check. */}
       <button

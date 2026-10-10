@@ -71,6 +71,13 @@ export const SCRIPT = {
     bronze: 'You won a bronze medal!',
   },
 
+  // Story time and song time
+  storyTime: 'Story time!',
+  storyPick: 'Pick a story!',
+  songTime: 'Song time!',
+  songPick: 'Pick a song!',
+  title: (entry) => `${entry.title}!`,
+
   // End of a game
   hooray: 'Hooray!',
   starsEarned: (n) => `You got ${n} ${n === 1 ? 'star' : 'stars'}!`,

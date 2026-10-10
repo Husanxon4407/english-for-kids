@@ -10,14 +10,23 @@ import { Bobo } from '../components/Mascot.jsx'
 import { RepeatIcon } from '../components/Icons.jsx'
 import { useProgress } from '../lib/progress.jsx'
 import { canPractice } from '../lib/review.js'
+import { useUzbek } from '../lib/uzbek.js'
 
-export default function WorldMap({ onHome, onOpenWorld, onPractice }) {
+// Two places that are not word worlds: they mix words from all of them.
+const SPECIAL = [
+  { id: 'stories', name: 'Story Time', color: '#f59e0b' },
+  { id: 'songs', name: 'Song Time', color: '#ec4899' },
+]
+
+export default function WorldMap({ onHome, onOpenWorld, onPractice, onStories, onSongs }) {
   const { speaking, speak } = useSpeaker()
   const { progress } = useProgress()
   const showPractice = canPractice(progress.words)
+  const uz = useUzbek()
+  const prompt = [SCRIPT.mapPrompt, ...uz.line('map')]
 
   useEffect(() => {
-    speak(SCRIPT.mapPrompt)
+    speak(prompt)
   }, [speak])
 
   async function practice() {
@@ -26,7 +35,11 @@ export default function WorldMap({ onHome, onOpenWorld, onPractice }) {
   }
 
   async function open(world) {
-    if (world.items) {
+    if (world.id === 'stories' || world.id === 'songs') {
+      await speak(world.id === 'stories' ? SCRIPT.storyTime : SCRIPT.songTime)
+      if (world.id === 'stories') onStories()
+      else onSongs()
+    } else if (world.items) {
       await speak(`${world.name}!`)
       onOpenWorld(world.id)
     } else {
@@ -55,12 +68,17 @@ export default function WorldMap({ onHome, onOpenWorld, onPractice }) {
           </button>
         )}
         <StarCounter />
-        <Mascot size="sm" talking={speaking} onClick={() => speak(SCRIPT.mapPrompt)} />
+        <Mascot size="sm" talking={speaking} onClick={() => speak(prompt)} />
       </TopBar>
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center p-4 sm:p-6 lg:max-w-7xl">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-5">
-          {worlds.map((world) => (
-            <WorldCard key={world.id} world={world} available={Boolean(world.items)} onClick={() => open(world)} />
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6">
+          {[...worlds.filter((w) => w.items), ...SPECIAL, ...worlds.filter((w) => !w.items)].map((world) => (
+            <WorldCard
+              key={world.id}
+              world={world}
+              available={Boolean(world.items) || SPECIAL.includes(world)}
+              onClick={() => open(world)}
+            />
           ))}
         </div>
       </main>

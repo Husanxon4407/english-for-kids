@@ -73,4 +73,32 @@ function Diamond() {
   )
 }
 
-export const shapeArt = { circle: Circle, square: Square, triangle: Triangle, star: Star, heart: Heart, diamond: Diamond }
+// Two more shapes that only the shapes song shows.
+function Rectangle() {
+  return (
+    <g>
+      <rect x="14" y="48" width="172" height="104" rx="12" fill="#fb923c" {...stroke} />
+      <Face />
+    </g>
+  )
+}
+
+function Oval() {
+  return (
+    <g>
+      <ellipse cx="100" cy="100" rx="58" ry="80" fill="#2dd4bf" {...stroke} />
+      <Face />
+    </g>
+  )
+}
+
+export const shapeArt = {
+  circle: Circle,
+  square: Square,
+  triangle: Triangle,
+  star: Star,
+  heart: Heart,
+  diamond: Diamond,
+  rectangle: Rectangle,
+  oval: Oval,
+}

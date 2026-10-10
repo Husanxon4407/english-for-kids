@@ -12,6 +12,7 @@ import { getDifficulty } from '../lib/settings.js'
 import { chime, pop } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 const PUZZLES_PER_GAME = 3
 
@@ -41,7 +42,8 @@ export default function PuzzleGame({ world, onBack, onHome }) {
   const { speaking, speak } = useSpeaker()
 
   const item = items[index]
-  const hint = index === 0 ? [...SCRIPT.puzzleIntro, SCRIPT.whatsThis] : SCRIPT.whatsThis
+  const uz = useUzbek()
+  const hint = index === 0 ? [...SCRIPT.puzzleIntro, ...uz.line('puzzle'), SCRIPT.whatsThis] : SCRIPT.whatsThis
 
   useEffect(() => {
     speak(hint)

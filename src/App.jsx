@@ -9,6 +9,13 @@ import MemoryGame from './games/MemoryGame.jsx'
 import PuzzleGame from './games/PuzzleGame.jsx'
 import StarQuiz from './games/StarQuiz.jsx'
 import ParentCorner from './pages/ParentCorner.jsx'
+import Shelf from './pages/Shelf.jsx'
+import StoryPlayer from './pages/StoryPlayer.jsx'
+import SongPlayer from './pages/SongPlayer.jsx'
+import { BookIcon, NoteIcon } from './components/Icons.jsx'
+import { getStory, stories } from './data/stories.js'
+import { getSong, songs } from './data/songs.js'
+import { useUzbek } from './lib/uzbek.js'
 import GrownUpsGate from './components/GrownUpsGate.jsx'
 import { getWorld } from './data/worlds.js'
 import { SCRIPT } from './data/script.js'
@@ -37,6 +44,7 @@ export default function App() {
   const world = nav.worldId ? getWorld(nav.worldId) : null
   const { progress } = useProgress()
   const { settings } = progress
+  const uz = useUzbek()
 
   // Apply the grown-up's sound settings.
   useEffect(() => {
@@ -51,6 +59,8 @@ export default function App() {
           onHome={home}
           onOpenWorld={(worldId) => go('world', { worldId })}
           onPractice={() => go('review', { reviewWorld: makeReviewWorld(progress.words) })}
+          onStories={() => go('stories')}
+          onSongs={() => go('songs')}
         />
       )
     case 'world':
@@ -93,6 +103,36 @@ export default function App() {
           onHome={home}
         />
       )
+    case 'stories':
+      return (
+        <Shelf
+          key="stories"
+          entries={stories}
+          kind="story"
+          prompt={[SCRIPT.storyPick, ...uz.line('stories')]}
+          badge={<BookIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
+          onBack={() => go('map')}
+          onHome={home}
+          onOpen={(storyId) => go('story', { storyId })}
+        />
+      )
+    case 'story':
+      return <StoryPlayer story={getStory(nav.storyId)} onBack={() => go('stories')} onHome={home} />
+    case 'songs':
+      return (
+        <Shelf
+          key="songs"
+          entries={songs}
+          kind="song"
+          prompt={[SCRIPT.songPick, ...uz.line('songs')]}
+          badge={<NoteIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
+          onBack={() => go('map')}
+          onHome={home}
+          onOpen={(songId) => go('song', { songId })}
+        />
+      )
+    case 'song':
+      return <SongPlayer song={getSong(nav.songId)} onBack={() => go('songs')} onHome={home} />
     case 'gate':
       return <GrownUpsGate onPass={() => go('parent')} onCancel={home} />
     case 'parent':

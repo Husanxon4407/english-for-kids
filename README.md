@@ -37,7 +37,34 @@ npm run voice -- --voice=af_bella --force   # switch voice, re-record all
 Run it after changing any text in `src/data/`. Lines without a recording fall
 back to the browser's built-in voice.
 
+### Uzbek helper
+
+The optional Uzbek helper (word meanings and instructions in Uzbek) uses a
+second set of clips in `public/audio/uz/`, recorded with Microsoft's neural
+Uzbek voice through the Azure Speech service. Put your key in `.env.local`
+(ignored by git):
+
+```
+AZURE_SPEECH_KEY=your-key
+AZURE_SPEECH_REGION=westeurope
+```
+
+```bash
+npm run voice:uz              # record new or changed lines in src/data/uzbek.js and stories.js
+```
+
+The Uzbek switch stays hidden in the app until these clips exist.
+
+## Songs
+
+The songs in `public/music/` are sung recordings from Pixabay Music, used
+under the Pixabay Content License; artists and source links are in
+`src/data/songs.js` and shown in the Grown-ups' corner. Each song's `cues`
+say which pictures appear while it plays.
+
 ## Structure
+
+- `src/data/stories.js`, `songs.js`, `uzbek.js` – Story Time, Song Time and the Uzbek helper
 
 - `src/data/` – word lists per world, `worlds.js`, and `script.js` (everything Bobo says)
 - `src/pages/` – Home, WorldMap, World, LearnWord, ParentCorner

@@ -9,6 +9,7 @@ import { useSpeaker } from '../lib/useSpeaker.js'
 import { useProgress } from '../lib/progress.jsx'
 import StarCounter from '../components/StarCounter.jsx'
 import { SCRIPT } from '../data/script.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 /**
  * "Learn a word": one big picture, the spoken word, replay, the item's
@@ -21,6 +22,7 @@ export default function LearnWord({ world, startIndex = 0, onBack, onHome, onFin
   const { speaking, speak } = useSpeaker()
   const { markSeen, addStars, recordActivity } = useProgress()
   const item = items[index]
+  const uz = useUzbek()
   const isLast = index === items.length - 1
 
   const sayWord = () => speak(SCRIPT.word(item))
@@ -28,7 +30,7 @@ export default function LearnWord({ world, startIndex = 0, onBack, onHome, onFin
   // Introduce each new word: "What's this?", the word, then a short phrase.
   useEffect(() => {
     markSeen(item.id)
-    speak([SCRIPT.whatsThis, SCRIPT.word(item), item.phrase])
+    speak([SCRIPT.whatsThis, SCRIPT.word(item), ...uz.word(item), item.phrase])
   }, [item, speak, markSeen])
 
   function makeSound() {

@@ -14,6 +14,7 @@ import { chime } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT, correctLines } from '../data/script.js'
 import { planTargets } from '../lib/review.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 // Each target becomes one question. The correct picture lands in a random
 // position so children learn the word, not the spot. Wrong choices come from
@@ -40,6 +41,7 @@ export default function ListenAndTap({ world, onBack, onHome }) {
   const [hint, setHint] = useState(false)
   const [missed, setMissed] = useState(false) // a wrong tap happened on this question
   const { speaking, speak } = useSpeaker()
+  const uz = useUzbek()
 
   const question = questions[qIndex]
   const target = question?.target
@@ -49,7 +51,7 @@ export default function ListenAndTap({ world, onBack, onHome }) {
     if (status !== 'asking') return
     setHint(false)
     setMissed(false)
-    speak(qIndex === 0 ? [world.introLine || SCRIPT.listenIntro, target.prompt] : target.prompt)
+    speak(qIndex === 0 ? [world.introLine || SCRIPT.listenIntro, ...uz.line('listen'), target.prompt] : target.prompt)
     // Ask once when each new question appears.
   }, [qIndex, round])
 

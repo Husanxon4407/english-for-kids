@@ -6,6 +6,11 @@ import { MEDAL_RANK } from './settings.js'
 const STORAGE_KEY = 'wordland.v2'
 const OLD_KEY = 'wordland.progress.v1' // single-child format from earlier versions
 
+// Families whose device is set to Uzbek get the Uzbek helper from the start.
+function defaultHelper() {
+  return typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('uz') ? 'uz' : 'off'
+}
+
 // One child's progress.
 const EMPTY = {
   stars: 0,
@@ -17,7 +22,8 @@ const EMPTY = {
   activities: {},
   // Best Star-challenge medal per world, e.g. { animals: 'silver' }.
   medals: {},
-  settings: { difficulty: 'explorer', sound: true, voiceSpeed: 'normal' },
+  // `helper` is the spoken language help: 'off' or 'uz' (Uzbek).
+  settings: { difficulty: 'explorer', sound: true, voiceSpeed: 'normal', helper: defaultHelper() },
 }
 
 // Profile pictures children recognize instantly — no names needed.

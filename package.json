@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "voice": "node scripts/generate-voice.mjs",
+    "voice:uz": "node scripts/generate-voice-uz.mjs",
     "deploy": "vite build && gh-pages -d dist --nojekyll"
   },
   "dependencies": {

@@ -144,3 +144,10 @@ export const worlds = [
 export function getWorld(id) {
   return worlds.find((w) => w.id === id)
 }
+
+const ITEMS = new Map(worlds.filter((w) => w.items).flatMap((w) => w.items.map((item) => [item.id, item])))
+
+/** Any vocabulary item from any world, by id (stories and songs mix worlds). */
+export function getItem(id) {
+  return ITEMS.get(id)
+}

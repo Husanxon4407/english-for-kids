@@ -79,6 +79,11 @@ button:focus-visible {
   100% { transform: translate(-50%, -70px) scale(1); opacity: 0; }
 }
 
+@keyframes wl-dance {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-7%) rotate(4deg); }
+}
+
 @keyframes wl-bump {
   0%, 100% { transform: scale(1); }
   40% { transform: scale(1.25); }
