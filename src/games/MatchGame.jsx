@@ -13,6 +13,7 @@ import { chime, pop } from '../lib/sfx.js'
 import { chunk, praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
 import { useUzbek } from '../lib/uzbek.js'
+import { pickRoundItems } from '../lib/review.js'
 
 // How far the finger must move before a press counts as a drag, not a tap.
 const DRAG_THRESHOLD = 12
@@ -33,7 +34,9 @@ export default function MatchGame({ world, onBack, onHome }) {
   const { progress, addStars, markSeen, recordActivity } = useProgress()
   const { pairs } = getDifficulty(progress.settings.difficulty)
   const [round, setRound] = useState(0)
-  const boards = useMemo(() => buildBoards(world.items, pairs), [world, pairs, round])
+  // Chosen once per round from the child's progress at the start of the round.
+  const roundItems = useMemo(() => pickRoundItems(world.items, progress.words), [world, round])
+  const boards = useMemo(() => buildBoards(roundItems, pairs), [roundItems, pairs])
   const [boardIndex, setBoardIndex] = useState(0)
   const [matched, setMatched] = useState([])
   const [selected, setSelected] = useState(null)
@@ -49,10 +52,15 @@ export default function MatchGame({ world, onBack, onHome }) {
   const style = world.matchStyle || 'shadow'
   const uz = useUzbek()
   const intro = [...SCRIPT.matchIntro[style], ...uz.line(style === 'color' ? 'matchColor' : 'matchShadow')]
-  const totalPairs = world.items.length
+  const totalPairs = roundItems.length
   const matchedSoFar = boardIndex * pairs + matched.length
-  // Two pairs per board sit in two wider columns; three in three.
-  const cols = board.pieces.length === 2 ? 'mx-auto w-full max-w-xl grid-cols-2' : 'grid-cols-3'
+  // Two pairs per board sit in two wider columns; three in three. The board
+  // is two rows of squares, so its width is capped by the room under the top bar.
+  const two = board.pieces.length === 2
+  const cols = two ? 'grid-cols-2' : 'grid-cols-3'
+  const boardWidth = two
+    ? 'max-w-[min(38rem,calc(var(--room)-5rem))] sm:max-w-[min(38rem,calc(var(--room)-6rem))] short:max-w-[calc(var(--room)-0.5rem)]'
+    : 'max-w-[min(56rem,calc((var(--room)-4.5rem)*1.5))] sm:max-w-[min(56rem,calc((var(--room)-5.5rem)*1.5))] short:max-w-[calc((var(--room)-1.5rem)*1.5)]'
 
   useEffect(() => {
     speak(boardIndex === 0 ? intro : SCRIPT.matchMore)
@@ -160,9 +168,9 @@ export default function MatchGame({ world, onBack, onHome }) {
         <Mascot size="sm" talking={speaking} onClick={() => speak(intro)} />
       </TopBar>
 
-      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center gap-6 px-4 pb-6 sm:gap-10">
+      <main className={`mx-auto flex w-full flex-1 flex-col justify-center gap-6 px-4 pb-6 sm:gap-10 short:gap-3 short:pb-3 ${boardWidth}`}>
         {/* Shadows */}
-        <div className={`grid gap-3 sm:gap-6 ${cols}`}>
+        <div className={`grid gap-3 sm:gap-6 short:gap-3 ${cols}`}>
           {board.shadows.map((item) => {
             const isMatched = matched.includes(item.id)
             return (
@@ -203,10 +211,11 @@ export default function MatchGame({ world, onBack, onHome }) {
         </div>
 
         {/* Pieces to drag or tap */}
-        <div className={`grid min-h-28 gap-3 sm:min-h-40 sm:gap-6 ${cols}`}>
+        <div className={`grid gap-3 sm:gap-6 short:gap-3 ${cols}`}>
           {board.pieces.map((item) =>
             matched.includes(item.id) ? (
-              <div key={`${round}-${boardIndex}-${item.id}`} />
+              // An empty square keeps the row's height when a piece has gone.
+              <div key={`${round}-${boardIndex}-${item.id}`} className="aspect-square" />
             ) : (
               <div key={`${round}-${boardIndex}-${item.id}`} className="animate-bounce-in">
                 <button
@@ -232,7 +241,7 @@ export default function MatchGame({ world, onBack, onHome }) {
           )}
         </div>
 
-        <div className="flex justify-center gap-1" aria-hidden="true">
+        <div className="flex justify-center gap-1 short:hidden" aria-hidden="true">
           {Array.from({ length: totalPairs }, (_, i) => (
             <StarIcon key={i} className={`h-7 w-7 ${i < matchedSoFar ? '' : 'opacity-25 grayscale'}`} />
           ))}

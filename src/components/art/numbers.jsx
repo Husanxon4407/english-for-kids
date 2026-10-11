@@ -1,5 +1,5 @@
 // Number Hill pictures: a big numeral with the same number of stars to count.
-import { numbers, songNumbers } from '../../data/numbers.js'
+import { numbers } from '../../data/numbers.js'
 import { OUTLINE, stroke } from './common.js'
 
 function starPoints(cx, cy, outer = 14, inner = 6.2) {
@@ -38,4 +38,4 @@ function NumberCard({ count, hex }) {
   )
 }
 
-export const numberArt = Object.fromEntries([...numbers, ...songNumbers].map((n) => [n.id, () => <NumberCard count={n.count} hex={n.hex} />]))
+export const numberArt = Object.fromEntries(numbers.map((n) => [n.id, () => <NumberCard count={n.count} hex={n.hex} />]))

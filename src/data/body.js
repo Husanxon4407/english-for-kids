@@ -6,4 +6,8 @@ export const body = [
   { id: 'ears', word: 'ears', phrase: 'These are my ears!', prompt: 'Touch your ears!', color: '#dcfce7' },
   { id: 'hands', word: 'hands', phrase: 'These are my hands!', prompt: 'Clap your hands!', color: '#ede9fe' },
   { id: 'feet', word: 'feet', phrase: 'These are my feet!', prompt: 'Stamp your feet!', color: '#ffedd5' },
+  { id: 'head', word: 'head', phrase: 'This is my head!', prompt: 'Touch your head!', color: '#dbeafe' },
+  { id: 'hair', word: 'hair', phrase: 'This is my hair!', prompt: 'Touch your hair!', color: '#e0f2fe' },
+  { id: 'arms', word: 'arms', phrase: 'These are my arms!', prompt: 'Wave your arms!', color: '#fef9c3' },
+  { id: 'legs', word: 'legs', phrase: 'These are my legs!', prompt: 'Shake your legs!', color: '#dcfce7' },
 ]

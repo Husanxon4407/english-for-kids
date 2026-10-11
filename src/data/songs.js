@@ -4,16 +4,22 @@
 // `cues` say which pictures are on screen while the song plays:
 // [seconds, [item ids]]. The times follow the words as they are sung.
 import { getItem } from './worlds.js'
-import { songNumbers } from './numbers.js'
 
 const LETTER_COLORS = ['#fee2e2', '#ffedd5', '#fef9c3', '#dcfce7', '#dbeafe', '#ede9fe', '#fce7f3']
 
-// Pictures that only songs use: the numbers seven to ten, two more shapes
-// and the alphabet.
+// Pictures that only songs use: the alphabet and the words the alphabet
+// song sings. (A word that a world teaches is taken from the world instead.)
+const SONG_WORDS = [
+  ['egg', 'egg', '#fef3c7'], ['fish', 'fish', '#cffafe'], ['goat', 'goat', '#dcfce7'], ['hat', 'hat', '#e0f2fe'],
+  ['icecream', 'ice cream', '#fce7f3'], ['jump', 'jump', '#fef9c3'], ['kite', 'kite', '#e0f2fe'], ['lamb', 'lamb', '#dcfce7'],
+  ['net', 'net', '#fef3c7'], ['owl', 'owl', '#ede9fe'], ['pet', 'pet', '#ffedd5'], ['queen', 'queen', '#fce7f3'],
+  ['umbrella', 'umbrella', '#e0e7ff'], ['van', 'van', '#fef9c3'], ['whale', 'whale', '#cffafe'], ['xylophone', 'xylophone', '#f1f5f9'],
+  ['yoyo', 'yo-yo', '#ffedd5'], ['zebra', 'zebra', '#dcfce7'], ['cup', 'cup', '#fef3c7'],
+]
 const EXTRA = new Map([
-  ...songNumbers.map((n) => [n.id, n]),
   ['rectangle', { id: 'rectangle', word: 'rectangle', color: '#ffedd5' }],
   ['oval', { id: 'oval', word: 'oval', color: '#ccfbf1' }],
+  ...SONG_WORDS.map(([id, word, color]) => [id, { id, word, color }]),
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map((letter, i) => [
     `letter-${letter}`,
     { id: `letter-${letter}`, word: letter.toUpperCase(), color: LETTER_COLORS[i % LETTER_COLORS.length] },
@@ -31,17 +37,23 @@ const FRUIT = ['apple', 'banana', 'orange', 'strawberry', 'grapes', 'pear']
 const ONE_TO_SIX = ['one', 'two', 'three', 'four', 'five', 'six']
 const SEVEN_TO_TEN = ['seven', 'eight', 'nine', 'ten']
 
+const HOME = ['bed', 'chair', 'table', 'door', 'window', 'lamp']
+const COLORS = ['red', 'orange-color', 'yellow', 'green', 'blue', 'purple']
+
 // "A is for apple, B is for ball...": when each letter starts, and the
-// picture for the words the worlds already teach.
+// picture of the word that is sung for it.
 const ALPHABET = [
   ['a', 9.6, 'apple'], ['b', 11.4, 'ball'], ['c', 13.2, 'cat'], ['d', 14.8, 'doll'],
-  ['e', 17.6], ['f', 19.6], ['g', 21.6], ['h', 23.5],
-  ['i', 26.4], ['j', 28.6], ['k', 30.6], ['l', 32.5],
-  ['m', 36.0, 'moon'], ['n', 38.2], ['o', 40.2], ['p', 42.1],
-  ['q', 44.6], ['r', 47.0, 'rain'], ['s', 49.4, 'sun'], ['t', 51.2, 'train'],
-  ['u', 54.0], ['v', 55.8], ['w', 57.4], ['x', 59.2], ['y', 62.0], ['z', 64.4],
-].map(([letter, at, picture]) => [at, picture ? [`letter-${letter}`, picture] : [`letter-${letter}`]])
+  ['e', 17.6, 'egg'], ['f', 19.6, 'fish'], ['g', 21.6, 'goat'], ['h', 23.5, 'hat'],
+  ['i', 26.4, 'icecream'], ['j', 28.6, 'jump'], ['k', 30.6, 'kite'], ['l', 32.5, 'lamb'],
+  ['m', 36.0, 'moon'], ['n', 38.2, 'net'], ['o', 40.2, 'owl'], ['p', 42.1, 'pet'],
+  ['q', 44.6, 'queen'], ['r', 47.0, 'rain'], ['s', 49.4, 'sun'], ['t', 51.2, 'train'],
+  ['u', 54.0, 'umbrella'], ['v', 55.8, 'van'], ['w', 57.4, 'whale'], ['x', 59.2, 'xylophone'],
+  ['y', 62.0, 'yoyo'], ['z', 64.4, 'zebra'],
+].map(([letter, at, picture]) => [at, [`letter-${letter}`, picture]])
 
+// `world` is the world whose card plays the song; `stage` is its backdrop
+// (see components/SongStage.jsx).
 export const songs = [
   {
     id: 'twinkle',
@@ -49,6 +61,8 @@ export const songs = [
     file: 'music/twinkle.mp3',
     cover: 'star',
     color: '#818cf8',
+    world: 'sky',
+    stage: 'night',
     credit: { artist: 'matthewmikemusic', url: 'https://pixabay.com/music/happy-childrens-tunes-twinkle-twinkle-213-233453/' },
     cues: [
       [0, ['star']],
@@ -68,6 +82,8 @@ export const songs = [
     file: 'music/numbers.mp3',
     cover: 'three',
     color: '#fb923c',
+    world: 'numbers',
+    stage: 'balloons',
     credit: { artist: 'matthewmikemusic', url: 'https://pixabay.com/music/happy-childrens-tunes-the-number-song-233460/' },
     cues: [
       [0, ['one', 'two', 'three']],
@@ -86,8 +102,16 @@ export const songs = [
     file: 'music/alphabet.mp3',
     cover: 'apple',
     color: '#f87171',
+    stage: 'sunburst',
     credit: { artist: 'principle345', url: 'https://pixabay.com/music/happy-childrens-tunes-alphabet-song-333891/' },
-    cues: [[0, ['letter-a', 'letter-b', 'letter-c']], ...ALPHABET, [67, ['letter-a', 'letter-b', 'letter-c']]],
+    cues: [
+      [0, ['letter-a', 'letter-b', 'letter-c']],
+      ...ALPHABET,
+      [67, ['letter-a', 'letter-b', 'letter-c']],
+      [78, ['letter-y', 'yoyo']],
+      [82, ['letter-z', 'zebra']],
+      [85, ['letter-a', 'letter-b', 'letter-c']],
+    ],
   },
   {
     id: 'shapes',
@@ -95,6 +119,8 @@ export const songs = [
     file: 'music/shapes.mp3',
     cover: 'heart',
     color: '#a78bfa',
+    world: 'shapes',
+    stage: 'castle',
     credit: { artist: 'NicksNicky', url: 'https://pixabay.com/music/pop-different-shapes-270780/' },
     cues: [
       [0, SHAPES],
@@ -126,6 +152,8 @@ export const songs = [
     file: 'music/animals.mp3',
     cover: 'lion',
     color: '#8fd16a',
+    world: 'animals',
+    stage: 'farm',
     credit: { artist: 'u_lw2amr44wh', url: 'https://pixabay.com/music/happy-childrens-tunes-animal-alphabet-fiesta-314103/' },
     cues: [
       [0, ANIMALS],
@@ -146,6 +174,8 @@ export const songs = [
     file: 'music/fruit.mp3',
     cover: 'strawberry',
     color: '#f472b6',
+    world: 'fruits',
+    stage: 'orchard',
     credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-fruit-salad-304350/' },
     cues: [
       [0, FRUIT],
@@ -168,8 +198,95 @@ export const songs = [
       [106, FRUIT],
     ],
   },
+  {
+    id: 'rainbow',
+    title: "Swingin' From A Rainbow",
+    file: 'music/rainbow.mp3',
+    cover: 'rainbow',
+    color: '#38bdf8',
+    world: 'colors',
+    stage: 'rainbow',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-swingin-from-a-rainbow-bubble-mix-315565/' },
+    cues: [
+      [0, ['rainbow']],
+      [14, ['rainbow', 'cloud']],
+      [20, ['rainbow']],
+      [24, COLORS],
+      [27.5, ['umbrella']],
+      [33, ['rainbow']],
+      [46, ['rainbow', 'cloud']],
+      [49, ['sun']],
+      [55, ['rainbow']],
+      [64, COLORS],
+    ],
+  },
+  {
+    id: 'kite',
+    title: 'My Kite',
+    file: 'music/kite.mp3',
+    cover: 'kite',
+    color: '#fbbf24',
+    world: 'toys',
+    stage: 'windy',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/pop-my-kite-319074/' },
+    cues: [
+      [0, ['kite']],
+      [19, ['kite', 'cloud']],
+      [30, ['kite']],
+      [60, ['kite', 'ball', 'car', 'train']],
+    ],
+  },
+  {
+    id: 'kitchen',
+    title: "The Kitchen's Come Alive",
+    file: 'music/kitchen.mp3',
+    cover: 'table',
+    color: '#60a5fa',
+    world: 'home',
+    stage: 'kitchen',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-the-kitchens-come-alive-350733/' },
+    cues: [
+      [0, HOME],
+      [7.5, ['chair']],
+      [10.5, ['table']],
+      [13, ['chair', 'table', 'cup']],
+      [19.5, HOME],
+      [37.5, ['cup']],
+      [47, ['cup', 'table']],
+      [61, HOME],
+      [64, ['apple', 'banana', 'orange']],
+      [66.5, ['cup']],
+      [73, ['lamp']],
+      [79, ['chair', 'table']],
+      [84.5, ['door']],
+      [93, HOME],
+      [103, ['star', 'moon']],
+      [107, HOME],
+    ],
+  },
+  {
+    id: 'hands',
+    title: 'My Hands',
+    file: 'music/hands.mp3',
+    cover: 'hands',
+    color: '#f472b6',
+    world: 'body',
+    stage: 'dots',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-my-hands-children-313008/' },
+    cues: [
+      [0, ['hands']],
+      [28, ['hands', 'one', 'two', 'three']],
+      [31, ['hands']],
+      [51, ['hands', 'feet', 'eyes', 'ears']],
+    ],
+  },
 ]
 
 export function getSong(id) {
   return songs.find((s) => s.id === id)
+}
+
+/** The song that belongs to a world's card, if it has one. */
+export function songForWorld(worldId) {
+  return songs.find((s) => s.world === worldId)
 }

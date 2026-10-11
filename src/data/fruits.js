@@ -6,4 +6,8 @@ export const fruits = [
   { id: 'strawberry', word: 'strawberry', phrase: "It's a strawberry!", prompt: 'Give me a strawberry!', thanks: 'Thank you! I like strawberries!', color: '#fce7f3' },
   { id: 'grapes', word: 'grapes', phrase: 'They are grapes!', prompt: 'Give me the grapes!', thanks: 'Thank you! I like grapes!', color: '#ede9fe' },
   { id: 'pear', word: 'pear', phrase: "It's a pear!", prompt: 'Give me a pear!', thanks: 'Thank you! I like pears!', color: '#ecfccb' },
+  { id: 'watermelon', word: 'watermelon', phrase: "It's a watermelon!", prompt: 'Give me a watermelon!', thanks: 'Thank you! I like watermelons!', color: '#dcfce7' },
+  { id: 'lemon', word: 'lemon', phrase: "It's a lemon!", prompt: 'Give me a lemon!', thanks: 'Thank you! I like lemons!', color: '#e0f2fe' },
+  { id: 'cherry', word: 'cherry', phrase: "It's a cherry!", prompt: 'Give me a cherry!', thanks: 'Thank you! I like cherries!', color: '#fef9c3' },
+  { id: 'pineapple', word: 'pineapple', phrase: "It's a pineapple!", prompt: 'Give me a pineapple!', thanks: 'Thank you! I like pineapples!', color: '#ffedd5' },
 ]

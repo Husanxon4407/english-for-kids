@@ -1,136 +1,115 @@
 import { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar.jsx'
-import Mascot from '../components/Mascot.jsx'
-import ItemArt from '../components/ItemArt.jsx'
-import Scene from '../components/Scenes.jsx'
-import AudioButton from '../components/AudioButton.jsx'
+import StoryStage from '../components/StoryStage.jsx'
 import StarCounter from '../components/StarCounter.jsx'
-import StarPop from '../components/StarPop.jsx'
 import GameComplete from '../components/GameComplete.jsx'
+import RoundButton from '../components/RoundButton.jsx'
+import { PauseIcon, PlayIcon } from '../components/Icons.jsx'
 import { useSpeaker } from '../lib/useSpeaker.js'
 import { useProgress } from '../lib/progress.jsx'
 import { useUzbek } from '../lib/uzbek.js'
-import { chime } from '../lib/sfx.js'
+import { stop as stopSpeaking } from '../lib/audio.js'
+import * as sfx from '../lib/sfx.js'
 import { SCRIPT } from '../data/script.js'
+
+const STORY_STARS = 2
+// A breath between sentences, and when a beat's sound plays (after the actors have moved).
+const PAUSE = 900
+const SFX_AT = 1100
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+// How long a sentence stays on screen at the very least. With the sound
+// switched off nothing is spoken, so this is what paces the story.
+const readingTime = (line) => 2200 + line.length * 55
+
+// Each beat can leave out what has not changed since the beat before.
+function sceneAt(beats, index) {
+  for (let i = index; i >= 0; i--) if (beats[i].scene) return beats[i].scene
+  return 'garden'
+}
+
 /**
- * A short picture story. In each scene Bobo tells a line or two and asks the
- * child to find something; the last scene just says goodbye. Words learned
- * in the worlds come back here in a new place, which is how they stick.
+ * A told story. Bobo says one sentence at a time and the stage acts it out:
+ * the child only watches and listens. One button pauses and plays.
  */
 export default function StoryPlayer({ story, onBack, onHome }) {
-  const { addStars, recordAnswer, recordActivity } = useProgress()
+  const { addStars, recordActivity } = useProgress()
   const uz = useUzbek()
   const [round, setRound] = useState(0)
   const [index, setIndex] = useState(0)
-  const [found, setFound] = useState(false)
-  const [missed, setMissed] = useState(false)
-  const [shakeId, setShakeId] = useState(null)
+  const [paused, setPaused] = useState(false)
   const [done, setDone] = useState(false)
   const { speaking, speak } = useSpeaker()
 
-  const isEnding = index === story.scenes.length
-  const scene = isEnding ? story.ending : story.scenes[index]
-
-  const tell = () =>
-    speak([
-      ...(index === 0 ? [SCRIPT.title(story), ...uz.text(story.uz)] : []),
-      ...scene.lines,
-      ...uz.text(scene.uz),
-      ...(scene.prompt ? [scene.prompt] : []),
-    ])
+  const beats = story.beats
+  const beat = beats[index]
 
   useEffect(() => {
-    setFound(false)
-    setMissed(false)
+    if (paused || done) return
     let cancelled = false
-    tell().then(async () => {
-      if (!isEnding || cancelled) return
-      await wait(700)
+    const started = Date.now()
+    const lines = [...(index === 0 ? [SCRIPT.title(story), ...uz.text(story.uz)] : []), beat.line, ...uz.text(beat.uz)]
+    const sound = beat.sfx && setTimeout(() => sfx[beat.sfx]?.(), beat.sfxAt || SFX_AT)
+
+    speak(lines).then(async () => {
+      await wait(Math.max(PAUSE, readingTime(beat.line) - (Date.now() - started)))
       if (cancelled) return
-      recordActivity(`story:${story.id}`)
-      setDone(true)
+      if (index < beats.length - 1) {
+        setIndex(index + 1)
+      } else {
+        addStars(STORY_STARS)
+        recordActivity(`story:${story.id}`)
+        setDone(true)
+      }
     })
     return () => {
       cancelled = true
+      clearTimeout(sound)
     }
-  }, [index, round])
+  }, [index, round, paused, done])
 
-  async function tap(item) {
-    if (found || isEnding) return
-    if (item.id !== scene.target) {
-      setMissed(true)
-      setShakeId(item.id)
-      speak([...SCRIPT.tryAgain, scene.prompt])
-      return
-    }
-    setFound(true)
-    chime()
-    addStars(1)
-    recordAnswer(scene.target, !missed)
-    await speak(scene.reward)
-    setIndex((i) => i + 1)
+  function toggle() {
+    // Pausing stops Bobo mid-sentence; playing again says that sentence from its start.
+    if (!paused) stopSpeaking()
+    setPaused(!paused)
   }
 
   function again() {
     setRound((r) => r + 1)
     setIndex(0)
+    setPaused(false)
     setDone(false)
   }
 
-  if (done) return <GameComplete stars={story.scenes.length} onAgain={again} onBack={onBack} />
+  if (done) return <GameComplete stars={STORY_STARS} onAgain={again} onBack={onBack} />
 
   return (
     <div className="flex min-h-dvh flex-col">
       <TopBar onBack={onBack} onHome={onHome}>
         <StarCounter />
-        <Mascot size="sm" talking={speaking} onClick={tell} />
       </TopBar>
 
-      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-4 px-3 pb-5 sm:gap-5 sm:px-6">
-        <div
-          key={`${round}-${index}`}
-          className="animate-bounce-in relative aspect-[4/3] w-full max-w-[min(56rem,calc((100dvh-17rem)*4/3))] overflow-hidden rounded-[2rem] border-8 border-white bg-white shadow-xl"
-        >
-          <Scene name={scene.scene} className="absolute inset-0 h-full w-full" />
-          {scene.items.map((item) => {
-            const isTarget = item.id === scene.target
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-label={item.id}
-                disabled={isEnding}
-                onClick={() => tap(item)}
-                onAnimationEnd={(e) => e.animationName === 'wl-shake' && setShakeId(null)}
-                className={`absolute aspect-square rounded-full transition-all duration-300 ${
-                  found && isTarget ? 'z-10 scale-125' : ''
-                } ${found && !isTarget ? 'opacity-50' : ''} ${shakeId === item.id ? 'animate-shake' : ''} ${
-                  isEnding ? 'animate-float' : 'active:scale-95'
-                }`}
-                style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }}
-              >
-                {found && isTarget && <StarPop />}
-                <ItemArt id={item.id} className="h-full w-full drop-shadow-md" />
-              </button>
-            )
-          })}
+      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-4 px-3 pb-5 sm:gap-5 sm:px-6 short:flex-row short:pb-3">
+        <div className="relative aspect-[4/3] w-full max-w-[min(56rem,calc((var(--room)-9.5rem)*4/3))] overflow-hidden rounded-[2rem] border-8 border-white bg-white shadow-xl short:max-w-[calc((var(--room)-1.5rem)*4/3)] short:border-4">
+          <StoryStage key={round} scene={sceneAt(beats, index)} actors={beat.actors} fx={beat.fx} talking={speaking} />
+          {/* How far the story has got. */}
+          <div className="absolute inset-x-0 bottom-0 z-[300] h-2 bg-white/50" aria-hidden="true">
+            <div
+              className="h-full rounded-r-full transition-[width] duration-700"
+              style={{ width: `${((index + 1) / beats.length) * 100}%`, backgroundColor: story.color }}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center gap-5">
-          <AudioButton onClick={tell} playing={speaking} label="Hear it again" />
-          <div className="flex gap-2" aria-hidden="true">
-            {[...story.scenes, story.ending].map((s, i) => (
-              <span
-                key={i}
-                className={`h-4 rounded-full border-2 border-white shadow-sm transition-all ${
-                  i === index ? 'w-10 bg-amber-400' : i < index ? 'w-4 bg-lime-400' : 'w-4 bg-white/70'
-                }`}
-              />
-            ))}
-          </div>
+        <div className="flex w-full max-w-3xl items-center gap-4 short:w-auto">
+          <RoundButton label={paused ? 'Play' : 'Pause'} color="green" size="md" onClick={toggle} pulsing={paused}>
+            {paused ? <PlayIcon className="ml-1 h-10 w-10 sm:h-12 sm:w-12 short:h-9 short:w-9" /> : <PauseIcon className="h-10 w-10 sm:h-12 sm:w-12 short:h-9 short:w-9" />}
+          </RoundButton>
+          {/* The sentence in writing, for grown-ups and early readers. */}
+          <p className="min-w-0 flex-1 rounded-3xl bg-white/85 px-4 py-2 text-center text-base font-bold leading-snug text-slate-700 shadow-sm sm:text-2xl short:hidden">
+            {beat.line}
+          </p>
         </div>
       </main>
     </div>

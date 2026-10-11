@@ -70,8 +70,10 @@ export default function WorldMap({ onHome, onOpenWorld, onPractice, onStories, o
         <StarCounter />
         <Mascot size="sm" talking={speaking} onClick={() => speak(prompt)} />
       </TopBar>
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center p-4 sm:p-6 lg:max-w-7xl">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6">
+      {/* On a tablet four rows of three, on a laptop two rows of six tall cards: as
+          big as the screen allows without scrolling. (Phones scroll.) */}
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center p-4 sm:max-w-[max(30rem,min(64rem,calc((var(--room)-22rem)*1.125+6rem)))] sm:p-6 lg:max-w-[min(120rem,calc(var(--room)*3-27rem))] short:max-w-5xl">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6 short:grid-cols-4 short:gap-4">
           {[...worlds.filter((w) => w.items), ...SPECIAL, ...worlds.filter((w) => !w.items)].map((world) => (
             <WorldCard
               key={world.id}

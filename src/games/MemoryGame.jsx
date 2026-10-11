@@ -13,6 +13,7 @@ import { chime, flip } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
 import { useUzbek } from '../lib/uzbek.js'
+import { pickRoundItems } from '../lib/review.js'
 
 // How long two different cards stay open before they turn back over.
 const LOOK_TIME = 900
@@ -33,7 +34,7 @@ export default function MemoryGame({ world, onBack, onHome }) {
   const { memoryPairs } = getDifficulty(progress.settings.difficulty)
   const pairs = Math.min(memoryPairs, world.items.length)
   const [round, setRound] = useState(0)
-  const cards = useMemo(() => buildCards(world.items, pairs), [world, pairs, round])
+  const cards = useMemo(() => buildCards(pickRoundItems(world.items, progress.words, pairs), pairs), [world, pairs, round])
   const [open, setOpen] = useState([]) // keys of the (up to two) cards being looked at
   const [matched, setMatched] = useState([]) // item ids already paired
   const [justMatched, setJustMatched] = useState(null)
@@ -91,8 +92,13 @@ export default function MemoryGame({ world, onBack, onHome }) {
 
   if (done) return <GameComplete stars={pairs} onAgain={playAgain} onBack={onBack} />
 
-  // Six cards sit in a 3 x 2 block; twelve grow to 4 x 3 and then 6 x 2.
-  const layout = cards.length <= 6 ? 'max-w-xl grid-cols-3' : 'max-w-xl grid-cols-3 sm:max-w-2xl sm:grid-cols-4 lg:max-w-5xl lg:grid-cols-6'
+  // Six cards sit in a 3 x 2 block; twelve are 3 x 4 on a phone, then 4 x 3,
+  // then 6 x 2. The width is capped by the room under the top bar so every
+  // card stays on screen.
+  const layout =
+    cards.length <= 6
+      ? 'grid-cols-3 max-w-[min(36rem,calc((var(--room)-6rem)*1.5))] short:max-w-[calc((var(--room)-2rem)*1.5)]'
+      : 'grid-cols-3 max-w-[min(36rem,calc((var(--room)-7rem)*0.75+1.5rem))] sm:grid-cols-4 sm:max-w-[min(42rem,calc((var(--room)-7.5rem)*1.33))] lg:grid-cols-6 lg:max-w-[min(64rem,calc((var(--room)-6.5rem)*3))] short:grid-cols-6 short:max-w-[calc((var(--room)-2rem)*3)]'
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -101,8 +107,8 @@ export default function MemoryGame({ world, onBack, onHome }) {
         <Mascot size="sm" talking={speaking} onClick={() => speak(intro)} />
       </TopBar>
 
-      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-6 px-4 pb-6">
-        <div className={`grid w-full gap-3 sm:gap-4 ${layout}`}>
+      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-6 px-4 pb-6 short:pb-3">
+        <div className={`grid w-full gap-3 sm:gap-4 short:gap-3 ${layout}`}>
           {cards.map((card, i) => {
             const isMatched = matched.includes(card.item.id)
             const faceUp = isMatched || open.includes(card.key)
@@ -140,7 +146,7 @@ export default function MemoryGame({ world, onBack, onHome }) {
           })}
         </div>
 
-        <div className="flex gap-1" aria-hidden="true">
+        <div className="flex gap-1 short:hidden" aria-hidden="true">
           {Array.from({ length: pairs }, (_, i) => (
             <StarIcon key={i} className={`h-7 w-7 ${i < matched.length ? '' : 'opacity-25 grayscale'}`} />
           ))}

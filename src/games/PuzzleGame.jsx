@@ -13,6 +13,7 @@ import { chime, pop } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
 import { useUzbek } from '../lib/uzbek.js'
+import { pickRoundItems } from '../lib/review.js'
 
 const PUZZLES_PER_GAME = 3
 
@@ -33,7 +34,7 @@ export default function PuzzleGame({ world, onBack, onHome }) {
   const { progress, addStars, markSeen, recordActivity } = useProgress()
   const { puzzleGrid: grid } = getDifficulty(progress.settings.difficulty)
   const [round, setRound] = useState(0)
-  const items = useMemo(() => shuffle(world.items).slice(0, PUZZLES_PER_GAME), [world, round])
+  const items = useMemo(() => pickRoundItems(world.items, progress.words, PUZZLES_PER_GAME), [world, round])
   const [index, setIndex] = useState(0)
   const [order, setOrder] = useState(() => scramble(grid * grid))
   const [selected, setSelected] = useState(null)
@@ -94,10 +95,10 @@ export default function PuzzleGame({ world, onBack, onHome }) {
         <Mascot size="sm" talking={speaking} onClick={() => speak(hint)} />
       </TopBar>
 
-      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-6 px-4 pb-6">
+      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-6 px-4 pb-6 short:pb-4">
         <div
           key={`${round}-${index}`}
-          className={`animate-bounce-in relative grid w-full max-w-[min(28rem,58dvh)] rounded-[2rem] bg-white shadow-xl transition-all duration-500 ${
+          className={`animate-bounce-in relative grid w-full max-w-[min(28rem,calc(var(--room)-6rem))] short:max-w-[calc(var(--room)-2rem)] rounded-[2rem] bg-white shadow-xl transition-all duration-500 ${
             solved ? 'p-3 ring-8 ring-lime-400' : 'p-3'
           }`}
           style={{ gridTemplateColumns: `repeat(${grid}, 1fr)`, gap: solved ? 0 : '0.5rem' }}
@@ -125,7 +126,7 @@ export default function PuzzleGame({ world, onBack, onHome }) {
           })}
         </div>
 
-        <div className="flex gap-1" aria-hidden="true">
+        <div className="flex gap-1 short:hidden" aria-hidden="true">
           {items.map((it, i) => (
             <StarIcon key={it.id} className={`h-7 w-7 ${i < index || (i === index && solved) ? '' : 'opacity-25 grayscale'}`} />
           ))}

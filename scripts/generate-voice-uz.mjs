@@ -52,7 +52,7 @@ const lines = [
   ...new Set([
     ...Object.values(UZ_WORDS),
     ...Object.values(UZ_LINES),
-    ...stories.flatMap((story) => [story.uz, ...story.scenes.map((scene) => scene.uz), story.ending.uz]),
+    ...stories.flatMap((story) => [story.uz, ...story.beats.map((beat) => beat.uz)]).filter(Boolean),
   ]),
 ].filter(Boolean)
 

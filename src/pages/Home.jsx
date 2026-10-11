@@ -11,6 +11,7 @@ import { UZBEK_AVAILABLE, useUzbek } from '../lib/uzbek.js'
 import { say } from '../lib/audio.js'
 import { UZ_LINES } from '../data/uzbek.js'
 import uzManifest from '../data/voice-manifest-uz.json'
+import { Hand } from '../components/ActivityPicture.jsx'
 
 export default function Home({ onPlay, onGrownUps }) {
   const { speaking, speak } = useSpeaker()
@@ -36,7 +37,7 @@ export default function Home({ onPlay, onGrownUps }) {
   }
 
   return (
-    <main className="relative flex min-h-dvh flex-col items-center justify-center gap-6 px-4 py-8 sm:gap-10">
+    <main className="relative flex min-h-dvh flex-col items-center justify-center gap-6 px-4 py-8 sm:gap-10 low:gap-4 low:py-4 short:flex-row short:gap-8">
       <div className="absolute right-4 top-4 flex items-center gap-3 sm:right-6 sm:top-6">
         {/* Whose turn it is — their own picture, so no reading is needed. */}
         {profiles.length > 1 && (
@@ -49,7 +50,7 @@ export default function Home({ onPlay, onGrownUps }) {
         )}
         <StarCounter />
       </div>
-      <h1 className="text-5xl font-extrabold tracking-tight text-sky-700 drop-shadow-sm sm:text-7xl">
+      <h1 className="text-5xl font-extrabold tracking-tight text-sky-700 drop-shadow-sm sm:text-7xl short:text-5xl">
         Word<span className="text-orange-500">Land</span>
       </h1>
 
@@ -61,9 +62,13 @@ export default function Home({ onPlay, onGrownUps }) {
         onClick={greet}
       />
 
-      <RoundButton label="Play" color="green" size="lg" onClick={play} className="animate-bounce-in">
-        <PlayIcon className="ml-2 h-16 w-16 sm:h-20 sm:w-20" />
-      </RoundButton>
+      <div className="relative">
+        <RoundButton label="Play" color="green" size="lg" onClick={play} className="animate-bounce-in">
+          <PlayIcon className="ml-2 h-16 w-16 sm:h-20 sm:w-20 short:ml-1 short:h-12 short:w-12" />
+        </RoundButton>
+        {/* No reading needed: a hand shows where to tap. */}
+        <Hand className="pointer-events-none absolute -bottom-4 -right-6 w-14 drop-shadow-lg sm:w-16" style={{ animation: 'wl-tap 1.1s ease-in-out infinite' }} />
+      </div>
 
       {UZBEK_AVAILABLE && (
       <button

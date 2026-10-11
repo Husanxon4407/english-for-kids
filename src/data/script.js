@@ -30,6 +30,7 @@ export const SCRIPT = {
     memory: 'Memory game!',
     puzzle: 'Puzzle time!',
     quiz: 'Star challenge!',
+    balloon: 'Pop the balloon!',
   },
 
   // Learn a word
@@ -61,6 +62,9 @@ export const SCRIPT = {
 
   // Puzzle
   puzzleIntro: ['Puzzle time!', 'Fix the picture!'],
+
+  // Balloon game
+  balloonIntro: ['Pop the balloon!', 'Listen and pop!'],
 
   // Star challenge: one try per word, a medal at the end — never a bad result.
   quizIntro: ['Star challenge!', 'Listen and tap!'],

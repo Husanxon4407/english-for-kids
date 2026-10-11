@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { KokoroTTS } from 'kokoro-js'
 import { toMp3, trimSilence } from './lib/audio-file.mjs'
+import { act, recipe } from './lib/acting.mjs'
 import { worlds } from '../src/data/worlds.js'
 import { PRAISE, SCRIPT, voiceKey } from '../src/data/script.js'
 import { stories } from '../src/data/stories.js'
@@ -23,6 +24,15 @@ import { songs } from '../src/data/songs.js'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUT_DIR = path.join(root, 'public', 'audio', 'voice')
 const MANIFEST = path.join(root, 'src', 'data', 'voice-manifest.json')
+
+// Story sentences already recorded with the expressive online voice
+// (`npm run voice:story`) are kept as they are.
+const STORY_MANIFEST = path.join(root, 'src', 'data', 'voice-story.json')
+const storyVoice = fs.existsSync(STORY_MANIFEST) ? JSON.parse(fs.readFileSync(STORY_MANIFEST, 'utf8')).lines : {}
+const hasStoryVoice = (text) => {
+  const file = storyVoice[voiceKey(text)]
+  return Boolean(file) && fs.existsSync(path.join(root, 'public', file))
+}
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -36,6 +46,9 @@ const FORCE = Boolean(args.force)
 
 // ---------------------------------------------------------------------------
 // 1. Collect every line the app can say.
+// Story sentences are acted (see lib/acting.mjs): line -> its pieces and moods.
+const acted = new Map()
+
 function collectLines() {
   const lines = new Set()
   const add = (x) => {
@@ -64,7 +77,10 @@ function collectLines() {
 
   for (const story of stories) {
     add(SCRIPT.title(story))
-    for (const scene of [...story.scenes, story.ending]) add([scene.lines, scene.prompt, scene.reward])
+    for (const beat of story.beats) {
+      add(beat.line)
+      if (beat.say) acted.set(beat.line, beat.say)
+    }
   }
   for (const song of songs) {
     add(SCRIPT.title(song))
@@ -79,7 +95,8 @@ function fileNameFor(text) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 40)
-  const hash = createHash('sha1').update(`${VOICE}|${SPEED}|${voiceKey(text)}`).digest('hex').slice(0, 8)
+  const how = acted.has(text) ? recipe(acted.get(text)) : SPEED
+  const hash = createHash('sha1').update(`${VOICE}|${how}|${voiceKey(text)}`).digest('hex').slice(0, 8)
   return `${slug || 'line'}-${hash}.mp3`
 }
 
@@ -95,6 +112,10 @@ fs.mkdirSync(OUT_DIR, { recursive: true })
 const manifest = { voice: VOICE, speed: SPEED, lines: {} }
 const todo = []
 for (const text of lines) {
+  if (hasStoryVoice(text)) {
+    manifest.lines[voiceKey(text)] = storyVoice[voiceKey(text)]
+    continue
+  }
   const file = `audio/voice/${fileNameFor(text)}`
   manifest.lines[voiceKey(text)] = file
   if (FORCE || !fs.existsSync(path.join(root, 'public', file))) todo.push({ text, file })
@@ -106,10 +127,15 @@ if (todo.length) {
   console.log('Loading voice model (first run downloads it)...')
   const tts = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', { dtype: 'q8', device: 'cpu' })
   let done = 0
+  let rate = 24000
+  const speakPiece = async (text, { voice = VOICE, speed = SPEED } = {}) => {
+    const audio = await tts.generate(text, { voice, speed })
+    rate = audio.sampling_rate
+    return trimSilence(audio.audio, rate)
+  }
   for (const { text, file } of todo) {
-    const audio = await tts.generate(text, { voice: VOICE, speed: SPEED })
-    const trimmed = trimSilence(audio.audio, audio.sampling_rate)
-    fs.writeFileSync(path.join(root, 'public', file), toMp3(trimmed, audio.sampling_rate))
+    const samples = acted.has(text) ? await act(acted.get(text), { speakPiece, rate, voice: VOICE }) : await speakPiece(text)
+    fs.writeFileSync(path.join(root, 'public', file), toMp3(samples, rate))
     done++
     console.log(`[${done}/${todo.length}] ${text}`)
   }

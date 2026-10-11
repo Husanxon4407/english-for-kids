@@ -53,6 +53,21 @@ export function wordsDueCount(words) {
   return introduced(words).filter(({ item }) => reviewScore(words[item.id]) >= 2).length
 }
 
+// A world has ten words, but a round for a small child should stay short.
+export const ROUND_WORDS = 6
+
+/**
+ * The words for one round of a game in a world: at most `count`, leaning
+ * towards the words the child knows least (never met, missed last time, or
+ * not seen for a while), with a little chance so rounds differ.
+ */
+export function pickRoundItems(items, words, count = ROUND_WORDS) {
+  if (items.length <= count) return items
+  const need = (item) => (words[item.id] ? reviewScore(words[item.id]) : 3) + Math.random() * 2
+  const scored = items.map((item) => ({ item, score: need(item) })).sort((a, b) => b.score - a.score)
+  return shuffle(scored.slice(0, count).map(({ item }) => item))
+}
+
 /**
  * The order of target words for one Listen-and-Tap round in a world: every
  * word once, but up to two words the child just missed come back a second

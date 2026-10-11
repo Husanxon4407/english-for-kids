@@ -13,7 +13,7 @@ import { getDifficulty } from '../lib/settings.js'
 import { chime } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT, correctLines } from '../data/script.js'
-import { planTargets } from '../lib/review.js'
+import { pickRoundItems, planTargets } from '../lib/review.js'
 import { useUzbek } from '../lib/uzbek.js'
 
 // Each target becomes one question. The correct picture lands in a random
@@ -26,13 +26,22 @@ function buildQuestions(targets, choices, poolFor) {
   })
 }
 
+// The pictures are as big as the screen allows: the width is capped by the
+// room left under the top bar, so the button, pictures and stars always fit.
+// A sideways phone puts the button beside one row of pictures.
+const CHOICE_GRID = {
+  2: 'grid-cols-2 max-w-[min(42rem,calc((var(--room)-15rem)*2))] sm:max-w-[min(42rem,calc((var(--room)-18rem)*2))] short:max-w-[calc((var(--room)-2.5rem)*2)]',
+  3: 'grid-cols-3 max-w-[min(56rem,calc((var(--room)-15rem)*3))] sm:max-w-[min(56rem,calc((var(--room)-18rem)*3))] short:max-w-[calc((var(--room)-2.5rem)*3)]',
+  4: 'grid-cols-2 max-w-[min(42rem,calc(var(--room)-15rem))] sm:max-w-[min(42rem,calc(var(--room)-18rem))] lg:grid-cols-4 lg:max-w-[min(64rem,calc((var(--room)-18rem)*4))] short:grid-cols-4 short:max-w-[calc((var(--room)-2.5rem)*4)]',
+}
+
 export default function ListenAndTap({ world, onBack, onHome }) {
   const { progress, addStars, recordAnswer, recordActivity } = useProgress()
   const { choices } = getDifficulty(progress.settings.difficulty)
   const [round, setRound] = useState(0)
   // Planned once per round from the child's progress at the start of the round.
   const questions = useMemo(() => {
-    const targets = world.isReview ? world.items : planTargets(world.items, progress.words)
+    const targets = world.isReview ? world.items : planTargets(pickRoundItems(world.items, progress.words), progress.words)
     return buildQuestions(targets, choices, world.poolFor || (() => world.items))
   }, [world, choices, round])
   const [qIndex, setQIndex] = useState(0)
@@ -96,14 +105,10 @@ export default function ListenAndTap({ world, onBack, onHome }) {
         <Mascot size="sm" talking={speaking} onClick={ask} />
       </TopBar>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 px-4 pb-6 sm:gap-8">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 px-4 pb-6 sm:gap-8 short:flex-row short:gap-5 short:pb-4">
         <AudioButton size="lg" onClick={ask} playing={speaking || hint} label="Hear it again" />
 
-        <div
-          className={`grid w-full gap-4 sm:gap-6 ${
-            question.options.length === 2 ? 'max-w-2xl grid-cols-2' : question.options.length === 3 ? 'max-w-4xl grid-cols-3' : 'max-w-2xl grid-cols-2 lg:max-w-5xl lg:grid-cols-4'
-          }`}
-        >
+        <div className={`grid w-full gap-4 sm:gap-6 short:min-w-0 short:flex-1 short:gap-4 ${CHOICE_GRID[question.options.length]}`}>
           {question.options.map((option) => {
             const isRight = status === 'correct' && option.id === target.id
             const faded = status === 'correct' && option.id !== target.id
@@ -133,7 +138,7 @@ export default function ListenAndTap({ world, onBack, onHome }) {
           })}
         </div>
 
-        <div className="flex gap-1" aria-hidden="true">
+        <div className="flex gap-1 short:flex-col" aria-hidden="true">
           {questions.map((q, i) => (
             <StarIcon
               key={i}

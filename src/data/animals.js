@@ -51,4 +51,8 @@ export const animals = [
     sound: 'Roar!',
     color: '#ffe0a3',
   },
+  { id: 'fish', word: 'fish', phrase: "It's a fish!", prompt: 'Find the fish!', sound: 'Blub blub!', color: '#cffafe' },
+  { id: 'horse', word: 'horse', phrase: "It's a horse!", prompt: 'Find the horse!', sound: 'Neigh!', color: '#fef3c7' },
+  { id: 'monkey', word: 'monkey', phrase: "It's a monkey!", prompt: 'Find the monkey!', sound: 'Ooh ooh, ah ah!', color: '#dcfce7' },
+  { id: 'elephant', word: 'elephant', phrase: "It's an elephant!", prompt: 'Find the elephant!', sound: 'Toot toot!', color: '#e0e7ff' },
 ]

@@ -6,4 +6,8 @@ export const toys = [
   { id: 'teddy', word: 'teddy bear', phrase: "It's a teddy bear!", prompt: 'Where is the teddy bear?', color: '#fef3c7' },
   { id: 'blocks', word: 'blocks', phrase: 'They are blocks!', prompt: 'Where are the blocks?', color: '#e0f2fe' },
   { id: 'train', word: 'train', phrase: "It's a train!", prompt: 'Where is the train?', sound: 'Choo choo!', color: '#dcfce7' },
+  { id: 'kite', word: 'kite', phrase: "It's a kite!", prompt: 'Where is the kite?', color: '#e0f2fe' },
+  { id: 'robot', word: 'robot', phrase: "It's a robot!", prompt: 'Where is the robot?', sound: 'Beep boop!', color: '#fef9c3' },
+  { id: 'drum', word: 'drum', phrase: "It's a drum!", prompt: 'Where is the drum?', sound: 'Boom boom!', color: '#dbeafe' },
+  { id: 'balloon', word: 'balloon', phrase: "It's a balloon!", prompt: 'Where is the balloon?', color: '#dcfce7' },
 ]

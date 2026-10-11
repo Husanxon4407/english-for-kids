@@ -1,4 +1,5 @@
 // Bobo — WordLand's original mascot: a round, friendly sprout creature.
+import { useCelebration } from '../lib/celebrate.js'
 
 const OUTLINE = '#1f3b3a'
 const stroke = { stroke: OUTLINE, strokeWidth: 4, strokeLinejoin: 'round', strokeLinecap: 'round' }
@@ -73,10 +74,13 @@ export function Bobo({ talking = false, waving = false, className = '' }) {
  * early readers only — everything Bobo says is also spoken aloud.
  */
 export default function Mascot({ talking, waving, bubble, size = 'md', onClick, className = '' }) {
+  // Bobo jumps for joy whenever the child gets something right.
+  const cheers = useCelebration()
   const sizes = {
-    sm: 'w-20 sm:w-24',
-    md: 'w-36 sm:w-44',
-    lg: 'w-48 sm:w-60 lg:w-72',
+    sm: 'w-20 sm:w-24 short:w-14',
+    md: 'w-36 sm:w-44 short:w-24',
+    // Never taller than about a third of the screen, so the buttons under Bobo stay in view.
+    lg: 'w-48 max-w-[34dvh] sm:w-60 lg:w-72 short:w-32',
   }
   return (
     <div className={`flex flex-col items-center ${className}`}>
@@ -92,7 +96,9 @@ export default function Mascot({ talking, waving, bubble, size = 'md', onClick, 
         aria-label="Bobo"
         className={`${sizes[size]} animate-float rounded-full transition-transform active:scale-95`}
       >
-        <Bobo talking={talking} waving={waving} className="h-auto w-full drop-shadow-lg" />
+        <span key={cheers} className="block" style={cheers ? { animation: 'wl-hop-high 0.5s ease-in-out 3' } : undefined}>
+          <Bobo talking={talking} waving={waving || cheers > 0} className="h-auto w-full drop-shadow-lg" />
+        </span>
       </button>
     </div>
   )

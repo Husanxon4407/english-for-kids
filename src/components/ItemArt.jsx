@@ -8,6 +8,8 @@ import { numberArt } from './art/numbers.jsx'
 import { shapeArt } from './art/shapes.jsx'
 import { skyArt } from './art/sky.jsx'
 import { letterArt } from './art/letters.jsx'
+import { alphabetArt } from './art/alphabet.jsx'
+import { moreArt } from './art/more.jsx'
 
 const ART = {
   ...animalArt,
@@ -20,6 +22,8 @@ const ART = {
   ...shapeArt,
   ...skyArt,
   ...letterArt,
+  ...alphabetArt,
+  ...moreArt,
 }
 
 /**

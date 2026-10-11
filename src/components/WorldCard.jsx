@@ -59,12 +59,12 @@ export default function WorldCard({ world, available, onClick }) {
       style={{ borderBottom: `8px solid ${world.color}` }}
     >
       <div
-        className={`aspect-[6/5] w-full overflow-hidden rounded-3xl p-3 sm:aspect-[3/2] ${available ? '' : 'opacity-45 saturate-50'}`}
+        className={`aspect-[6/5] w-full overflow-hidden rounded-3xl p-3 sm:aspect-[3/2] lg:aspect-square lg:p-5 short:aspect-[3/2] ${available ? '' : 'opacity-45 saturate-50'}`}
         style={{ backgroundColor: `${world.color}33` }}
       >
         <WorldPicture world={world} />
       </div>
-      <span className={`text-base font-bold sm:text-xl ${available ? 'text-slate-700' : 'text-slate-400'}`}>
+      <span className={`text-base font-bold leading-tight sm:text-xl lg:text-lg xl:text-xl ${available ? 'text-slate-700' : 'text-slate-400'}`}>
         {world.name}
       </span>
     </button>

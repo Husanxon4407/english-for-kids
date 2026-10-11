@@ -9,6 +9,7 @@ import { wordsDueCount } from '../lib/review.js'
 import { say } from '../lib/audio.js'
 import { worlds } from '../data/worlds.js'
 import { songs } from '../data/songs.js'
+import { MUSIC_CREDITS } from '../lib/bgm.js'
 import { UZBEK_AVAILABLE } from '../lib/uzbek.js'
 import { SCRIPT } from '../data/script.js'
 
@@ -228,6 +229,7 @@ function WorldProgress({ world, progress }) {
           <span>Match: {activities[`${world.id}:match`] || 0}×</span>
           <span>Memory: {activities[`${world.id}:memory`] || 0}×</span>
           <span>Puzzle: {activities[`${world.id}:puzzle`] || 0}×</span>
+          <span>Balloons: {activities[`${world.id}:balloon`] || 0}×</span>
           <span>
             Star challenge: {activities[`${world.id}:quiz`] || 0}×
             {progress.medals[world.id] ? ` — best medal: ${progress.medals[world.id]}` : ''}
@@ -287,15 +289,15 @@ function WorldProgress({ world, progress }) {
 
 function MusicCredits() {
   return (
-    <Card title="Song credits">
+    <Card title="Music credits">
       <p className="text-sm text-slate-500">
-        The songs in Song Time are from Pixabay Music and are used under the Pixabay Content License. Thank you to the artists:
+        The songs and the background music are from Pixabay Music and are used under the Pixabay Content License. Thank you to the artists:
       </p>
       <ul className="mt-2 space-y-1 text-base">
-        {songs.map((song) => (
-          <li key={song.id}>
-            <span className="font-bold">{song.title}</span> — {song.credit.artist}{' '}
-            <a className="text-sm text-sky-600 underline" href={song.credit.url} target="_blank" rel="noreferrer noopener">
+        {[...songs.map((song) => ({ title: song.title, ...song.credit })), ...MUSIC_CREDITS].map((credit) => (
+          <li key={credit.url}>
+            <span className="font-bold">{credit.title}</span> — {credit.artist}{' '}
+            <a className="text-sm text-sky-600 underline" href={credit.url} target="_blank" rel="noreferrer noopener">
               source
             </a>
           </li>
@@ -381,6 +383,16 @@ export default function ParentCorner({ onBack }) {
               On
             </Choice>
             <Choice selected={!settings.sound} onClick={() => setSetting('sound', false)}>
+              Off
+            </Choice>
+          </div>
+
+          <h3 className="mb-2 mt-6 font-bold">Background music</h3>
+          <div role="radiogroup" aria-label="Background music" className="grid grid-cols-2 gap-3">
+            <Choice selected={settings.music} onClick={() => setSetting('music', true)}>
+              On
+            </Choice>
+            <Choice selected={!settings.music} onClick={() => setSetting('music', false)}>
               Off
             </Choice>
           </div>

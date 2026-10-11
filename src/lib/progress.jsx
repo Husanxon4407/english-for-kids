@@ -22,8 +22,9 @@ const EMPTY = {
   activities: {},
   // Best Star-challenge medal per world, e.g. { animals: 'silver' }.
   medals: {},
-  // `helper` is the spoken language help: 'off' or 'uz' (Uzbek).
-  settings: { difficulty: 'explorer', sound: true, voiceSpeed: 'normal', helper: defaultHelper() },
+  // `helper` is the spoken language help: 'off' or 'uz' (Uzbek). `music` is the
+  // soft background music; `sound` switches everything off.
+  settings: { difficulty: 'explorer', sound: true, music: true, voiceSpeed: 'normal', helper: defaultHelper() },
 }
 
 // Profile pictures children recognize instantly — no names needed.

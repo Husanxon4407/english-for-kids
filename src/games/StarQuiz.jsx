@@ -15,18 +15,27 @@ import { chime, fanfare } from '../lib/sfx.js'
 import { praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
 import { useUzbek } from '../lib/uzbek.js'
+import { pickRoundItems } from '../lib/review.js'
 
-function buildQuestions(items, choices) {
-  return shuffle(items).map((target) => {
+// `targets` are the words asked in this round; wrong choices come from the whole world.
+function buildQuestions(targets, items, choices) {
+  return shuffle(targets).map((target) => {
     const others = shuffle(items.filter((i) => i.id !== target.id)).slice(0, choices - 1)
     return { target, options: shuffle([target, ...others]) }
   })
 }
 
+// Sized from the room under the top bar so everything fits without scrolling;
+// a sideways phone puts the button beside one row of pictures.
+const CHOICE_GRID = {
+  3: 'grid-cols-3 max-w-[min(56rem,calc((var(--room)-14.5rem)*3))] sm:max-w-[min(56rem,calc((var(--room)-17rem)*3))] short:max-w-[calc((var(--room)-2.5rem)*3)]',
+  4: 'grid-cols-2 max-w-[min(42rem,calc(var(--room)-14.5rem))] sm:max-w-[min(42rem,calc(var(--room)-17rem))] lg:grid-cols-4 lg:max-w-[min(64rem,calc((var(--room)-17rem)*4))] short:grid-cols-4 short:max-w-[calc((var(--room)-2.5rem)*4)]',
+}
+
 // One dot per question: green when known, soft blue when Bobo helped. Never red.
-function ResultDots({ results, total, className = 'h-5 w-5' }) {
+function ResultDots({ results, total, className = 'h-5 w-5', column = '' }) {
   return (
-    <div className="flex gap-2" aria-hidden="true">
+    <div className={`flex gap-2 ${column}`} aria-hidden="true">
       {Array.from({ length: total }, (_, i) => (
         <span
           key={i}
@@ -49,10 +58,10 @@ function QuizResult({ medal, results, onAgain, onBack }) {
   }, [])
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-5 px-4 py-8">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-5 px-4 py-8 short:gap-3 short:py-3">
       <div className="flex items-end gap-2">
         <Mascot size="lg" talking={speaking} waving onClick={() => speak(lines)} />
-        <Medal kind={medal} className="animate-bounce-in h-36 w-32 drop-shadow-lg sm:h-56 sm:w-48" />
+        <Medal kind={medal} className="animate-bounce-in h-36 w-32 drop-shadow-lg sm:h-56 sm:w-48 short:h-28 short:w-24" />
       </div>
       <ResultDots results={results} total={results.length} className="h-7 w-7" />
       <div className="flex items-center gap-6">
@@ -76,7 +85,10 @@ export default function StarQuiz({ world, onBack, onHome }) {
   const { progress, addStars, recordAnswer, recordActivity, recordMedal } = useProgress()
   const { quizChoices } = getDifficulty(progress.settings.difficulty)
   const [round, setRound] = useState(0)
-  const questions = useMemo(() => buildQuestions(world.items, quizChoices), [world, quizChoices, round])
+  const questions = useMemo(
+    () => buildQuestions(pickRoundItems(world.items, progress.words), world.items, quizChoices),
+    [world, quizChoices, round],
+  )
   const [qIndex, setQIndex] = useState(0)
   const [results, setResults] = useState([])
   const [picked, setPicked] = useState(null)
@@ -134,10 +146,10 @@ export default function StarQuiz({ world, onBack, onHome }) {
         <Mascot size="sm" talking={speaking} onClick={ask} />
       </TopBar>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-5 px-4 pb-6 sm:gap-7">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-5 px-4 pb-6 sm:gap-7 short:flex-row short:pb-4">
         <AudioButton size="lg" onClick={ask} playing={speaking && !picked} label="Hear it again" />
 
-        <div className={`grid w-full gap-3 sm:gap-6 ${options.length === 3 ? 'max-w-4xl grid-cols-3' : 'max-w-2xl grid-cols-2 lg:max-w-5xl lg:grid-cols-4'}`}>
+        <div className={`grid w-full gap-3 sm:gap-6 short:min-w-0 short:flex-1 short:gap-4 ${CHOICE_GRID[options.length]}`}>
           {options.map((option) => {
             const isTarget = option.id === target.id
             const reveal = picked && isTarget
@@ -167,7 +179,7 @@ export default function StarQuiz({ world, onBack, onHome }) {
           })}
         </div>
 
-        <ResultDots results={results} total={questions.length} />
+        <ResultDots results={results} total={questions.length} column="short:flex-col" />
       </main>
     </div>
   )

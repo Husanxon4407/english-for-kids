@@ -4,7 +4,7 @@ import { BackIcon, HomeIcon } from './Icons.jsx'
 /** Header with large back / home buttons so a child never gets stuck. */
 export default function TopBar({ onBack, onHome, children }) {
   return (
-    <header className="flex items-center gap-3 px-4 pt-4 sm:px-6 sm:pt-6">
+    <header className="flex items-center gap-3 px-4 pt-4 sm:px-6 sm:pt-6 short:pt-2">
       {onBack && (
         <RoundButton label="Back" onClick={onBack}>
           <BackIcon className="h-8 w-8" />

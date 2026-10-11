@@ -20,12 +20,12 @@ function Splat({ hex }) {
   )
 }
 
-function StarTarget({ hex, filled }) {
+function StarTarget({ hex, edge = hex, filled }) {
   return (
     <path
       d={STAR}
       fill={filled ? hex : '#fff'}
-      stroke={hex}
+      stroke={edge}
       strokeWidth={filled ? 6 : 9}
       strokeDasharray={filled ? undefined : '14 10'}
       strokeLinejoin="round"
@@ -38,7 +38,7 @@ export const colorArt = Object.fromEntries(
     c.id,
     ({ variant }) =>
       variant === 'target' || variant === 'target-filled' ? (
-        <StarTarget hex={c.hex} filled={variant === 'target-filled'} />
+        <StarTarget hex={c.hex} edge={c.edge} filled={variant === 'target-filled'} />
       ) : (
         <Splat hex={c.hex} />
       ),

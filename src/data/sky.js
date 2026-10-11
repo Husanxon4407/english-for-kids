@@ -6,4 +6,8 @@ export const sky = [
   { id: 'rain', word: 'rain', phrase: "It's rain!", prompt: 'Show me the rain!', sound: 'Drip drop!', color: '#e2e8f0' },
   { id: 'snow', word: 'snow', phrase: "It's snow!", prompt: 'Show me the snow!', color: '#dbeafe' },
   { id: 'rainbow', word: 'rainbow', phrase: "It's a rainbow!", prompt: 'Show me the rainbow!', color: '#fef9c3' },
+  { id: 'wind', word: 'wind', phrase: "It's the wind!", prompt: 'Show me the wind!', sound: 'Whoosh!', color: '#dcfce7' },
+  { id: 'lightning', word: 'lightning', phrase: "It's lightning!", prompt: 'Show me the lightning!', color: '#fef9c3' },
+  { id: 'snowman', word: 'snowman', phrase: "It's a snowman!", prompt: 'Show me the snowman!', color: '#bae6fd' },
+  { id: 'umbrella', word: 'umbrella', phrase: "It's an umbrella!", prompt: 'Show me the umbrella!', color: '#e0e7ff' },
 ]

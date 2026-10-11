@@ -4,6 +4,7 @@
 // silent.
 import manifest from '../data/voice-manifest.json'
 import { voiceKey } from '../data/script.js'
+import { setSpeaking } from './bgm.js'
 
 const PREFERRED_VOICES = [
   'Google US English',
@@ -164,18 +165,24 @@ function playClip(src) {
 
 async function speakOne(text, options = {}) {
   halt()
-  const src = options.src || clipFor(text)
-  if (src) {
-    try {
-      await playClip(src)
-      return
-    } catch {
-      // The recording is missing or broken — use the browser voice instead.
+  // The background music steps down while Bobo is speaking.
+  setSpeaking(true)
+  try {
+    const src = options.src || clipFor(text)
+    if (src) {
+      try {
+        await playClip(src)
+        return
+      } catch {
+        // The recording is missing or broken — use the browser voice instead.
+      }
     }
+    // Clips with no English text (the Uzbek helper) have nothing to fall back to.
+    if (!text) return
+    await speakWithSynthesis(text, options)
+  } finally {
+    setSpeaking(false)
   }
-  // Clips with no English text (the Uzbek helper) have nothing to fall back to.
-  if (!text) return
-  await speakWithSynthesis(text, options)
 }
 
 /**

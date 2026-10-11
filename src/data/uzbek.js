@@ -11,6 +11,10 @@ export const UZ_WORDS = {
   duck: "o'rdak",
   bird: 'qush',
   lion: 'sher',
+  fish: 'baliq',
+  horse: 'ot',
+  monkey: 'maymun',
+  elephant: 'fil',
 
   apple: 'olma',
   banana: 'banan',
@@ -18,6 +22,10 @@ export const UZ_WORDS = {
   strawberry: 'qulupnay',
   grapes: 'uzum',
   pear: 'nok',
+  watermelon: 'tarvuz',
+  lemon: 'limon',
+  cherry: 'gilos',
+  pineapple: 'ananas',
 
   red: 'qizil',
   blue: "ko'k",
@@ -25,6 +33,10 @@ export const UZ_WORDS = {
   green: 'yashil',
   purple: 'binafsha',
   'orange-color': "to'q sariq",
+  pink: 'pushti',
+  brown: 'jigarrang',
+  black: 'qora',
+  white: 'oq',
 
   ball: 'koptok',
   car: 'mashina',
@@ -32,6 +44,10 @@ export const UZ_WORDS = {
   teddy: 'ayiqcha',
   blocks: 'kubiklar',
   train: 'poyezd',
+  kite: 'varrak',
+  robot: 'robot',
+  drum: "nog'ora",
+  balloon: 'shar',
 
   bed: 'karavot',
   chair: 'stul',
@@ -39,6 +55,10 @@ export const UZ_WORDS = {
   door: 'eshik',
   window: 'deraza',
   lamp: 'chiroq',
+  sofa: 'divan',
+  clock: 'soat',
+  cup: 'piyola',
+  bath: 'vanna',
 
   eyes: "ko'zlar",
   nose: 'burun',
@@ -46,6 +66,10 @@ export const UZ_WORDS = {
   ears: 'quloqlar',
   hands: "qo'llar",
   feet: 'oyoqlar',
+  head: 'bosh',
+  hair: 'soch',
+  arms: 'bilaklar',
+  legs: 'boldirlar',
 
   one: 'bir',
   two: 'ikki',
@@ -53,6 +77,10 @@ export const UZ_WORDS = {
   four: "to'rt",
   five: 'besh',
   six: 'olti',
+  seven: 'yetti',
+  eight: 'sakkiz',
+  nine: "to'qqiz",
+  ten: "o'n",
 
   circle: 'doira',
   square: 'kvadrat',
@@ -60,6 +88,10 @@ export const UZ_WORDS = {
   star: 'yulduz',
   heart: 'yurak',
   diamond: 'romb',
+  rectangle: "to'rtburchak",
+  oval: 'oval',
+  arrow: "ko'rsatkich",
+  cross: 'xoch',
 
   sun: 'quyosh',
   moon: 'oy',
@@ -67,6 +99,10 @@ export const UZ_WORDS = {
   rain: "yomg'ir",
   snow: 'qor',
   rainbow: 'kamalak',
+  wind: 'shamol',
+  lightning: 'chaqmoq',
+  snowman: 'qorbobo',
+  umbrella: 'soyabon',
 }
 
 /** Explanations of screens and activities. */
@@ -80,5 +116,5 @@ export const UZ_LINES = {
   puzzle: "Rasmni to'g'ri yig'!",
   quiz: 'Yulduzli sinov! Tingla va rasmni bos!',
   songs: "Keling, birga qo'shiq aytamiz!",
-  stories: 'Ertak vaqti! Tingla va rasmni bos!',
+  stories: 'Ertak vaqti! Ertakni tanla!',
 }

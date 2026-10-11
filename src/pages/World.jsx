@@ -1,94 +1,48 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar.jsx'
 import Mascot from '../components/Mascot.jsx'
 import ItemArt from '../components/ItemArt.jsx'
 import StarCounter from '../components/StarCounter.jsx'
-import PictureTile from '../components/PictureTile.jsx'
-import Medal from '../components/Medal.jsx'
-import { EarIcon, SpeakerIcon, StarIcon } from '../components/Icons.jsx'
+import ActivityPicture, { Hand } from '../components/ActivityPicture.jsx'
 import { useSpeaker } from '../lib/useSpeaker.js'
 import { useProgress } from '../lib/progress.jsx'
 import { SCRIPT } from '../data/script.js'
+import { songForWorld } from '../data/songs.js'
 
-// The three activities in each world. Pictures (not text) tell children what
-// each one is, and tapping says its name before starting.
+// The activities in each world (the song only where the world has one).
+// Moving pictures (not text) tell children what each one is, and tapping
+// says its name before starting.
 const ACTIVITIES = [
   { id: 'learn', name: SCRIPT.activities.learn, color: '#38bdf8' },
   { id: 'listen', name: SCRIPT.activities.listen, color: '#fb923c' },
   { id: 'match', name: SCRIPT.activities.match, color: '#f472b6' },
   { id: 'memory', name: SCRIPT.activities.memory, color: '#a78bfa' },
   { id: 'puzzle', name: SCRIPT.activities.puzzle, color: '#34d399' },
+  { id: 'balloon', name: SCRIPT.activities.balloon, color: '#f43f5e' },
   { id: 'quiz', name: SCRIPT.activities.quiz, color: '#fbbf24' },
+  { id: 'song', name: SCRIPT.songTime, color: '#ec4899' },
 ]
 
-function ActivityPicture({ id, items, matchStyle, medal }) {
-  const [a, b] = items
-  if (id === 'learn') {
-    return (
-      <div className="relative h-full w-full">
-        <ItemArt id={a.id} className="h-full w-full" />
-        <span className="absolute -bottom-1 -right-1 rounded-full bg-sky-500 p-1 text-white shadow sm:p-1.5">
-          <SpeakerIcon className="h-4 w-4 sm:h-6 sm:w-6" />
-        </span>
-      </div>
-    )
-  }
-  if (id === 'listen') {
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-between">
-        <span className="flex h-[46%] items-center rounded-full bg-orange-400 p-[6%] text-white shadow">
-          <EarIcon className="h-full w-auto" />
-        </span>
-        <div className="flex h-[46%] w-full justify-center gap-[6%]">
-          <ItemArt id={b.id} className="h-full w-auto rounded-lg bg-white p-0.5" />
-          <ItemArt id={items[2].id} className="h-full w-auto rounded-lg bg-white p-0.5" />
-        </div>
-      </div>
-    )
-  }
-  if (id === 'memory') {
-    return (
-      <div className="flex h-full w-full items-center justify-center gap-[6%]">
-        <span className="flex aspect-square w-[44%] -rotate-6 items-center justify-center rounded-xl border-2 border-white bg-violet-400 shadow">
-          <StarIcon className="h-2/3 w-2/3" />
-        </span>
-        <ItemArt id={items[3].id} className="w-[44%] rotate-6 rounded-xl bg-white p-0.5 shadow" />
-      </div>
-    )
-  }
-  if (id === 'puzzle') {
-    return (
-      <div className="grid h-full w-full grid-cols-2 gap-[5%]">
-        {[0, 3, 2, 1].map((piece) => (
-          <PictureTile key={piece} item={items[4]} grid={2} index={piece} className="rounded-lg shadow-sm" />
-        ))}
-      </div>
-    )
-  }
-  if (id === 'quiz') return <Medal kind={medal || 'gold'} className={`h-full w-full ${medal ? '' : 'opacity-90'}`} />
-  const last = items[items.length - 1]
-  return (
-    <div className="flex h-full w-full items-center justify-center gap-1">
-      <ItemArt id={last.id} className="w-1/2" />
-      {matchStyle === 'color' ? (
-        <ItemArt id={last.id} variant="target" className="w-1/2" />
-      ) : (
-        <ItemArt id={last.id} className="w-1/2" style={{ filter: 'brightness(0)', opacity: 0.22 }} />
-      )}
-    </div>
-  )
-}
+// How long a child may look at the screen before a hand shows where to start.
+const HINT_AFTER = 7000
 
 export default function World({ world, onBack, onHome, onLearn, onPlay, welcome }) {
   const { speaking, speak } = useSpeaker()
   const { progress } = useProgress()
+  const [hint, setHint] = useState(false)
+  const activities = songForWorld(world.id) ? ACTIVITIES : ACTIVITIES.filter((a) => a.id !== 'song')
   const intro = welcome ? [...world.learnDone, SCRIPT.learnFinished] : [world.intro]
+  // The hand points at the next thing to try: learning first, then a game.
+  const hintId = progress.activities[`${world.id}:learn`] ? 'listen' : 'learn'
 
   useEffect(() => {
     speak(intro)
+    const timer = setTimeout(() => setHint(true), HINT_AFTER)
+    return () => clearTimeout(timer)
   }, [])
 
   async function openActivity(activity) {
+    setHint(false)
     await speak(activity.name)
     if (activity.id === 'learn') onLearn(0)
     else onPlay(activity.id)
@@ -101,9 +55,12 @@ export default function World({ world, onBack, onHome, onLearn, onPlay, welcome 
         <Mascot size="sm" talking={speaking} waving={welcome} onClick={() => speak(intro)} />
       </TopBar>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-6 p-4 sm:gap-8 sm:p-6 lg:max-w-6xl">
-        <section className="grid grid-cols-3 gap-3 sm:gap-5 lg:grid-cols-6">
-          {ACTIVITIES.map((activity, i) => {
+      {/* Two rows of big activity cards, then the world's words. Everything is
+          made of squares, so the width is capped by the room under the top bar;
+          a sideways phone gets one row of each. */}
+      <main className="mx-auto flex w-full max-w-[max(16rem,min(48rem,calc((var(--room)-2.5rem)*1.08)))] flex-1 flex-col justify-center gap-5 p-4 sm:max-w-[min(62rem,calc((var(--room)-4.5rem)*1.6))] sm:gap-7 sm:p-6 short:max-w-[calc((var(--room)-1rem)*4.2)] short:gap-3 short:px-4 short:py-2">
+        <section className="grid grid-cols-4 gap-3 sm:gap-5 short:grid-cols-8 short:gap-3">
+          {activities.map((activity, i) => {
             const plays = progress.activities[`${world.id}:${activity.id}`] || 0
             const medal = activity.id === 'quiz' ? progress.medals[world.id] : null
             return (
@@ -112,34 +69,37 @@ export default function World({ world, onBack, onHome, onLearn, onPlay, welcome 
                 type="button"
                 aria-label={activity.name}
                 onClick={() => openActivity(activity)}
-                className="animate-bounce-in relative rounded-[2rem] bg-white p-3 shadow-lg transition-transform active:scale-95 sm:p-4"
-                style={{ borderBottom: `8px solid ${activity.color}`, animationDelay: `${i * 90}ms` }}
+                className="animate-bounce-in relative rounded-3xl bg-white p-2 shadow-lg transition-transform active:scale-95 sm:rounded-[2rem] sm:p-4"
+                style={{ borderBottom: `8px solid ${activity.color}`, animationDelay: `${i * 80}ms` }}
               >
-                <div className="aspect-square rounded-3xl p-2 sm:p-3" style={{ backgroundColor: `${activity.color}26` }}>
+                <div className="aspect-square rounded-2xl p-1.5 sm:rounded-3xl sm:p-3" style={{ backgroundColor: `${activity.color}26` }}>
                   <ActivityPicture id={activity.id} items={world.items} matchStyle={world.matchStyle} medal={medal} />
                 </div>
                 {plays > 0 && !medal && (
-                  <span className="absolute -right-1 -top-1 flex h-9 w-9 items-center justify-center rounded-full bg-amber-400 text-lg font-extrabold text-white shadow" aria-hidden="true">
+                  <span className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-amber-400 text-sm font-extrabold text-white shadow sm:h-9 sm:w-9 sm:text-lg" aria-hidden="true">
                     ★
                   </span>
+                )}
+                {hint && activity.id === hintId && (
+                  <Hand className="pointer-events-none absolute -bottom-3 right-0 z-10 w-1/2 drop-shadow-lg" style={{ animation: 'wl-tap 1.1s ease-in-out infinite' }} />
                 )}
               </button>
             )
           })}
         </section>
 
-        {/* Free exploration: tap any animal to learn it. */}
-        <section className="mx-auto grid w-full max-w-3xl grid-cols-3 gap-3 sm:grid-cols-6 sm:gap-4">
+        {/* Free exploration: tap any picture to learn its word. */}
+        <section className="grid grid-cols-5 gap-2 sm:grid-cols-10 sm:gap-3 short:grid-cols-10 short:gap-2">
           {world.items.map((item, index) => (
             <button
               key={item.id}
               type="button"
               aria-label={item.word}
               onClick={() => onLearn(index)}
-              className="animate-bounce-in rounded-3xl bg-white p-2 shadow-md transition-transform active:scale-95"
-              style={{ animationDelay: `${300 + index * 60}ms` }}
+              className="animate-bounce-in rounded-2xl bg-white p-1.5 shadow-md transition-transform active:scale-95 sm:p-2"
+              style={{ animationDelay: `${300 + index * 50}ms` }}
             >
-              <div className="aspect-square rounded-2xl p-1" style={{ backgroundColor: item.color }}>
+              <div className="aspect-square rounded-xl p-0.5" style={{ backgroundColor: item.color }}>
                 <ItemArt id={item.id} className="h-full w-full" />
               </div>
             </button>

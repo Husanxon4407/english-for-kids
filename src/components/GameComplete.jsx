@@ -17,12 +17,12 @@ export default function GameComplete({ stars, onAgain, onBack }) {
   }, [])
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-6 px-4 py-8">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-6 px-4 py-8 low:gap-4 low:py-4 short:gap-2 short:py-3">
       <Mascot size="lg" talking={speaking} waving onClick={() => speak(lines)} />
       <div className="flex flex-wrap justify-center gap-1" aria-label={`${stars} stars`}>
         {Array.from({ length: stars }, (_, i) => (
           <span key={i} className="animate-bounce-in" style={{ animationDelay: `${300 + i * 150}ms` }}>
-            <StarIcon className="h-12 w-12 sm:h-16 sm:w-16" />
+            <StarIcon className="h-12 w-12 sm:h-16 sm:w-16 short:h-10 short:w-10" />
           </span>
         ))}
       </div>

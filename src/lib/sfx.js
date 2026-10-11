@@ -34,11 +34,12 @@ function play(notes) {
   notes.forEach(([freq, offset, duration, volume, type]) => tone(c, freq, t + offset, duration, volume, type))
 }
 
-/** Correct answer: a short rising chime. */
-export const chime = () => play([[660, 0, 0.18], [880, 0.1, 0.2], [1320, 0.2, 0.35, 0.09]])
+/** Correct answer: a bright, bouncy run of notes up to a sparkle. */
+export const chime = () =>
+  play([[659, 0, 0.14, 0.11, 'triangle'], [784, 0.09, 0.14, 0.11, 'triangle'], [988, 0.18, 0.16, 0.11, 'triangle'], [1319, 0.28, 0.4, 0.09], [1976, 0.3, 0.3, 0.04]])
 
 /** Picking something up / selecting. */
-export const pop = () => play([[520, 0, 0.12, 0.1, 'triangle']])
+export const pop = () => play([[620, 0, 0.07, 0.1, 'triangle'], [880, 0.05, 0.1, 0.07, 'triangle']])
 
 /** Turning a card over. */
 export const flip = () => play([[392, 0, 0.09, 0.08, 'triangle'], [587, 0.05, 0.1, 0.07, 'triangle']])
@@ -46,3 +47,13 @@ export const flip = () => play([[392, 0, 0.09, 0.08, 'triangle'], [587, 0.05, 0.
 /** End of a game. */
 export const fanfare = () =>
   play([[523, 0, 0.2], [659, 0.15, 0.2], [784, 0.3, 0.2], [1047, 0.45, 0.5, 0.1]])
+
+// Story sounds.
+/** Eating: three soft crunches. */
+export const munch = () => play([[180, 0, 0.09, 0.14, 'square'], [150, 0.22, 0.09, 0.14, 'square'], [170, 0.44, 0.09, 0.14, 'square']])
+
+/** A jump or a bounce: two quick rising notes. */
+export const boing = () => play([[300, 0, 0.12, 0.1, 'triangle'], [600, 0.09, 0.2, 0.09, 'triangle']])
+
+/** Knock, knock. */
+export const knock = () => play([[140, 0, 0.1, 0.2, 'triangle'], [140, 0.25, 0.1, 0.2, 'triangle']])
