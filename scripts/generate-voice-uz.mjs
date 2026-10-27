@@ -73,7 +73,19 @@ function fileNameFor(text) {
 
 const escapeXml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-async function synthesize(text, { key, region }) {
+async function synthesize(...args) {
+  // The free tier answers 429 when asked too quickly: wait and try again.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await synthesizeOnce(...args)
+    } catch (error) {
+      if (!error.retry || attempt >= 8) throw error
+      await new Promise((resolve) => setTimeout(resolve, 2000 * attempt))
+    }
+  }
+}
+
+async function synthesizeOnce(text, { key, region }) {
   // The service expects the modern apostrophe-like letter in o‘ and g‘.
   const spoken = text.replace(/([og])'/gi, '$1‘')
   const ssml = `<speak version="1.0" xml:lang="uz-UZ"><voice name="${VOICE}"><prosody rate="${RATE}">${escapeXml(spoken)}</prosody></voice></speak>`
@@ -88,6 +100,7 @@ async function synthesize(text, { key, region }) {
     body: ssml,
   })
   if (!response.ok) {
+    if (response.status === 429) throw Object.assign(new Error('Azure Speech answered 429 Too Many Requests'), { retry: true })
     const hint = response.status === 401 ? ' (check AZURE_SPEECH_KEY and AZURE_SPEECH_REGION)' : ''
     throw new Error(`Azure Speech answered ${response.status} ${response.statusText}${hint}`)
   }

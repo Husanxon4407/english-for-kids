@@ -86,7 +86,19 @@ function ssmlFor(say) {
   return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="${VOICE}">${pieces.join('')}</voice></speak>`
 }
 
-async function synthesize(ssml, { key, region }) {
+async function synthesize(...args) {
+  // The free tier answers 429 when asked too quickly: wait and try again.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await synthesizeOnce(...args)
+    } catch (error) {
+      if (!error.retry || attempt >= 8) throw error
+      await new Promise((resolve) => setTimeout(resolve, 2000 * attempt))
+    }
+  }
+}
+
+async function synthesizeOnce(ssml, { key, region }) {
   const response = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
     method: 'POST',
     headers: {
@@ -98,6 +110,7 @@ async function synthesize(ssml, { key, region }) {
     body: ssml,
   })
   if (!response.ok) {
+    if (response.status === 429) throw Object.assign(new Error('Azure Speech answered 429 Too Many Requests'), { retry: true })
     const hint = response.status === 401 ? ' (check AZURE_SPEECH_KEY and AZURE_SPEECH_REGION)' : ''
     throw new Error(`Azure Speech answered ${response.status} ${response.statusText}${hint}`)
   }
@@ -147,10 +160,13 @@ if (todo.length) {
   }
 }
 
-// Remove story recordings that no longer belong to any sentence.
-const keep = new Set(Object.values(storyLines).map((f) => path.basename(f)))
-for (const f of fs.readdirSync(OUT_DIR)) {
-  if (f.startsWith('story-') && f.endsWith('.mp3') && !keep.has(f)) fs.unlinkSync(path.join(OUT_DIR, f))
+// Remove story recordings that no longer belong to any sentence. Only files
+// this script made before are touched: "story-time-....mp3" is Bobo's own clip.
+const keep = new Set(Object.values(storyLines))
+const before = fs.existsSync(STORY_MANIFEST) ? Object.values(JSON.parse(fs.readFileSync(STORY_MANIFEST, 'utf8')).lines) : []
+for (const file of before) {
+  const full = path.join(root, 'public', file)
+  if (!keep.has(file) && fs.existsSync(full)) fs.unlinkSync(full)
 }
 
 fs.writeFileSync(STORY_MANIFEST, JSON.stringify({ voice: VOICE, lines: storyLines }, null, 2) + '\n')
