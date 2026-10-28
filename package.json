@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-offline.mjs",
     "preview": "vite preview",
     "voice": "node scripts/generate-voice.mjs",
     "voice:uz": "node scripts/generate-voice-uz.mjs",
     "voice:story": "node scripts/generate-voice-story.mjs",
-    "deploy": "vite build && node scripts/deploy.mjs"
+    "deploy": "npm run build && node scripts/deploy.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

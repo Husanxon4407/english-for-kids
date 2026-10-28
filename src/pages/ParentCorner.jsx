@@ -11,6 +11,7 @@ import { worlds } from '../data/worlds.js'
 import { songs } from '../data/songs.js'
 import { MUSIC_CREDITS } from '../lib/bgm.js'
 import { UZBEK_AVAILABLE } from '../lib/uzbek.js'
+import { saveSongs, useOffline } from '../lib/offline.js'
 import { SCRIPT } from '../data/script.js'
 
 const MAX_PROFILES = 4
@@ -310,6 +311,50 @@ function MusicCredits() {
   )
 }
 
+// Whether WordLand is saved on this device for playing without internet.
+function OfflineStatus() {
+  const offline = useOffline()
+  const [savingSongs, setSavingSongs] = useState(false)
+  const percent = offline.total ? Math.min(100, Math.round((offline.saved / offline.total) * 100)) : 0
+  const songsMb = Math.round(offline.songsBytes / 1e6)
+  return (
+    <div className="rounded-2xl bg-white p-4 shadow-sm">
+      {offline.state === 'ready' && <p className="font-bold text-lime-700">✓ Ready to play without internet on this device.</p>}
+      {offline.state === 'saving' && (
+        <>
+          <p className="font-bold">Saving WordLand on this device… {percent}%</p>
+          <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full rounded-full bg-sky-400 transition-[width]" style={{ width: `${percent}%` }} />
+          </div>
+          <p className="mt-1 text-sm text-slate-500">It keeps going in the background while your child plays.</p>
+        </>
+      )}
+      {offline.state === 'idle' && <p className="text-sm text-slate-500">Not fully saved yet: WordLand saves itself while it is open with internet.</p>}
+      {offline.state === 'unsupported' && <p className="text-sm text-slate-500">This browser cannot save WordLand for offline use.</p>}
+      {offline.songsTotal > 0 && (
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+          <span>
+            Songs saved: {offline.songsSaved} of {offline.songsTotal}
+          </span>
+          {offline.songsSaved < offline.songsTotal && (
+            <button
+              type="button"
+              disabled={savingSongs}
+              onClick={() => {
+                setSavingSongs(true)
+                saveSongs().finally(() => setSavingSongs(false))
+              }}
+              className="rounded-full bg-sky-500 px-4 py-1.5 font-bold text-white disabled:opacity-50"
+            >
+              {savingSongs ? 'Saving the songs…' : `Save all songs (${songsMb} MB)`}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // --- Page -------------------------------------------------------------------
 export default function ParentCorner({ onBack }) {
   const { progress, activeProfile, setSetting, resetProgress } = useProgress()
@@ -399,6 +444,9 @@ export default function ParentCorner({ onBack }) {
               Off
             </Choice>
           </div>
+
+          <h3 className="mb-2 mt-6 font-bold">Play without internet</h3>
+          <OfflineStatus />
 
           <h3 className="mb-2 mt-6 font-bold">Speaking check (Parrot game)</h3>
           <p className="mb-2 text-sm text-slate-500">

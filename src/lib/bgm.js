@@ -60,6 +60,15 @@ function checkRelease() {
   }, SETTLE_MS)
 }
 
+// Once the music is saved on the device (see lib/offline.js) there is nothing
+// to wait for: it may start at once.
+if (typeof caches !== 'undefined' && typeof document !== 'undefined') {
+  caches
+    .match(new URL(TRACKS.play.file, document.baseURI).href)
+    .then((saved) => saved && releaseMusic())
+    .catch(() => {})
+}
+
 /** Called by the voice while it is downloading clips ahead. */
 export function setFetchingVoice(value) {
   fetchingVoice = value

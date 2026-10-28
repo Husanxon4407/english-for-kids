@@ -51,6 +51,9 @@ function pump() {
   setFetchingVoice(inflight.size > 0)
 }
 
+/** Whether clips are being fetched ahead right now (other downloads wait for them). */
+export const voiceFetching = () => inflight.size > 0 || queue.length > 0
+
 /**
  * Download the recordings of these lines in the background, so they are ready
  * before they are needed. Lines can also be { src } clips (the Uzbek helper).
