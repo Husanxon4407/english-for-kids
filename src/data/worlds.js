@@ -12,6 +12,11 @@ import { veggies } from './veggies.js'
 import { vehicles } from './vehicles.js'
 import { sea } from './sea.js'
 import { bugs } from './bugs.js'
+import { feelings } from './feelings.js'
+import { actions } from './actions.js'
+import { family } from './family.js'
+import { school } from './school.js'
+import { dinos } from './dinos.js'
 
 // The world map. Worlds with `items` are playable; the rest show as
 // "coming soon" so the map already hints at the bigger adventure.
@@ -211,6 +216,78 @@ export const worlds = [
       'Go on a bug hunt outside and whisper the names you find: “Ant!”',
       'Move like the bugs: buzz like a bee, wiggle like a worm.',
       'Look at a picture book and count the bugs together.',
+    ],
+  },
+  {
+    id: 'feelings',
+    name: 'Feelings Village',
+    intro: "Welcome to Feelings Village! How do you feel today?",
+    learnDone: ['Wonderful!', 'You know all the feelings!'],
+    color: '#fb7185',
+    items: feelings,
+    // Faces have the same round shadow, so they match onto a faded picture.
+    matchStyle: 'faded',
+    tryAtHome: [
+      'Make a face together — happy, sad, surprised — and guess the word.',
+      'At bedtime, ask: “Were you happy today? Were you sleepy?”',
+      'Point to faces in a picture book: “Is he sad or happy?”',
+    ],
+  },
+  {
+    id: 'actions',
+    name: 'Action Park',
+    intro: "Welcome to Action Park! Let's move!",
+    learnDone: ['Phew!', 'You know all the actions!'],
+    color: '#f97316',
+    items: actions,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Play “Simon says”: “Jump! Clap! Walk!” — then let the child give the orders.',
+      'At the playground, say what you do: “I can climb!” “I can run!”',
+      'Dance to a song and stop when the music stops.',
+    ],
+  },
+  {
+    id: 'family',
+    name: 'My Family',
+    intro: "Welcome to My Family! Let's meet everyone!",
+    learnDone: ['Lovely!', 'You know the whole family!'],
+    color: '#e879f9',
+    items: family,
+    matchStyle: 'faded',
+    tryAtHome: [
+      'Look at family photos and name everyone: “This is my grandma!”',
+      'On a video call, say hello in English: “Hello, grandpa!”',
+      'Draw your family together and label each person.',
+    ],
+  },
+  {
+    id: 'school',
+    name: 'School Bag',
+    intro: "Welcome to School Bag! Let's open the bag!",
+    learnDone: ['Ready for school!', 'You know everything in the bag!'],
+    color: '#3b82f6',
+    items: school,
+    // Pencil, pen and crayon cast the same shadow.
+    matchStyle: 'faded',
+    tryAtHome: [
+      'Pack a bag together: “Pencil — in! Book — in!”',
+      'While drawing, ask for things in English: “Crayon, please!”',
+      'Hide a pencil and ask: “Where is the pencil?”',
+    ],
+  },
+  {
+    id: 'dinos',
+    name: 'Dino Valley',
+    intro: "Welcome to Dino Valley! Stomp stomp! Let's find the dinosaurs!",
+    learnDone: ['Roar!', 'You know all the dinosaurs!'],
+    color: '#22c55e',
+    items: dinos,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Stomp like a T-rex and roar, then fly like a pterodactyl.',
+      'Play with toy dinosaurs and name each one.',
+      'Bury a toy in sand or rice and dig for a “fossil”.',
     ],
   },
 ]

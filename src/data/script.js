@@ -49,6 +49,7 @@ export const SCRIPT = {
   matchIntro: {
     shadow: ["Let's match!", 'Put each picture on its shadow.'],
     color: ["Let's match!", 'Put each paint on its star.'],
+    faded: ["Let's match!", 'Put each picture on the same one.'],
   },
   matchMore: 'More! Match them!',
   matchWrong: ['Hmm, not that one.', 'Try again!'],

@@ -2,6 +2,7 @@ import ItemArt from './ItemArt.jsx'
 import PictureTile from './PictureTile.jsx'
 import Medal from './Medal.jsx'
 import { NoteIcon, SpeakerIcon, StarIcon } from './Icons.jsx'
+import { targetLook } from '../lib/matchLook.js'
 
 // A pointing hand, used to show "tap here" without any words.
 export function Hand({ className = '', style }) {
@@ -55,7 +56,7 @@ export default function ActivityPicture({ id, items, matchStyle, medal }) {
           {matchStyle === 'color' ? (
             <ItemArt id={d.id} variant="target" className="absolute right-0 top-1/2 w-[54%] -translate-y-1/2" />
           ) : (
-            <ItemArt id={d.id} className="absolute right-0 top-1/2 w-[54%] -translate-y-1/2" style={{ filter: 'brightness(0)', opacity: 0.22 }} />
+            <ItemArt id={d.id} className="absolute right-0 top-1/2 w-[54%] -translate-y-1/2" style={targetLook(matchStyle)} />
           )}
           <div className="absolute left-0 top-1/2 w-[54%] -translate-y-1/2" style={{ animation: 'wl-slide 2s ease-in-out infinite' }}>
             <ItemArt id={d.id} className="w-full drop-shadow" />

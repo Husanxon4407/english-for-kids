@@ -14,6 +14,7 @@ import { chunk, praise, shuffle } from '../lib/random.js'
 import { SCRIPT } from '../data/script.js'
 import { useUzbek } from '../lib/uzbek.js'
 import { pickRoundItems } from '../lib/review.js'
+import { targetLook } from '../lib/matchLook.js'
 
 // How far the finger must move before a press counts as a drag, not a tap.
 const DRAG_THRESHOLD = 12
@@ -51,7 +52,7 @@ export default function MatchGame({ world, onBack, onHome }) {
   const board = boards[boardIndex]
   const style = world.matchStyle || 'shadow'
   const uz = useUzbek()
-  const intro = [...SCRIPT.matchIntro[style], ...uz.line(style === 'color' ? 'matchColor' : 'matchShadow')]
+  const intro = [...SCRIPT.matchIntro[style], ...uz.line({ color: 'matchColor', faded: 'matchSame' }[style] || 'matchShadow')]
   const totalPairs = roundItems.length
   const matchedSoFar = boardIndex * pairs + matched.length
   // Two pairs per board sit in two wider columns; three in three. The board
@@ -178,7 +179,7 @@ export default function MatchGame({ world, onBack, onHome }) {
                 key={`${round}-${boardIndex}-${item.id}`}
                 type="button"
                 data-slot={item.id}
-                aria-label={isMatched ? item.word : style === 'color' ? 'star' : 'shadow'}
+                aria-label={isMatched ? item.word : { color: 'star', faded: 'picture' }[style] || 'shadow'}
                 onClick={() => tapShadow(item.id)}
                 className={`relative aspect-square rounded-[2rem] border-4 border-dashed p-2 transition-all sm:p-4 ${
                   isMatched ? 'border-transparent bg-white shadow-lg' : 'border-sky-300 bg-white/50'
@@ -200,8 +201,8 @@ export default function MatchGame({ world, onBack, onHome }) {
                     <ItemArt
                       id={item.id}
                       className={`h-full w-full transition-all duration-500 ${isMatched ? 'animate-bounce-in' : ''}`}
-                      // A grey silhouette until matched.
-                      style={isMatched ? undefined : { filter: 'brightness(0)', opacity: 0.22 }}
+                      // A grey silhouette (or faded picture) until matched.
+                      style={isMatched ? undefined : targetLook(style)}
                     />
                   )}
                 </div>
