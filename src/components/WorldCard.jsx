@@ -1,6 +1,6 @@
 import ItemArt from './ItemArt.jsx'
 
-// Pictures for worlds that are not built yet, and for the two special places.
+// Pictures for the two special places (and any world that is not built yet).
 const SOON = {
   stories: (
     <>
@@ -17,14 +17,6 @@ const SOON = {
       <ellipse cx="33" cy="76" rx="14" ry="11" fill="#ec4899" stroke="#be185d" strokeWidth="4" />
       <ellipse cx="81" cy="66" rx="14" ry="11" fill="#ec4899" stroke="#be185d" strokeWidth="4" />
       <path d="M14 24 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z M106 78 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4 z" fill="#fbbf24" />
-    </>
-  ),
-  island: (
-    <>
-      <ellipse cx="60" cy="86" rx="50" ry="10" fill="#7dd3fc" />
-      <ellipse cx="60" cy="80" rx="30" ry="9" fill="#fde68a" />
-      <path d="M62 80 Q58 50 66 30" stroke="#92400e" strokeWidth="6" fill="none" strokeLinecap="round" />
-      <path d="M66 30 Q46 22 36 36 M66 30 Q86 20 96 34 M66 30 Q60 14 48 14 M66 30 Q76 14 88 18" stroke="#16a34a" strokeWidth="6" fill="none" strokeLinecap="round" />
     </>
   ),
 }
@@ -53,7 +45,8 @@ export default function WorldCard({ world, available, onClick }) {
       type="button"
       onClick={onClick}
       aria-label={world.name}
-      className={`group flex flex-col items-center gap-2 rounded-[2rem] p-3 shadow-lg transition-transform active:scale-95 sm:p-4 ${
+      // Two, three or four a row (the map's gaps are 1rem, 1.5rem and 1.5rem).
+      className={`group flex w-[calc(50%-0.5rem)] flex-col items-center gap-2 rounded-[2rem] p-3 shadow-lg transition-transform active:scale-95 sm:w-[calc(33.333%-1rem)] sm:p-4 lg:w-[calc(25%-1.125rem)] short:w-[calc(25%-0.75rem)] ${
         available ? 'bg-white' : 'bg-white/60'
       }`}
       style={{ borderBottom: `8px solid ${world.color}` }}

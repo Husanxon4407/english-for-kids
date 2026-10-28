@@ -11,6 +11,11 @@ import { letterArt } from './art/letters.jsx'
 import { alphabetArt } from './art/alphabet.jsx'
 import { moreArt } from './art/more.jsx'
 import { propArt } from './art/props.jsx'
+import { clothesArt } from './art/clothes.jsx'
+import { veggieArt } from './art/veggies.jsx'
+import { vehicleArt } from './art/vehicles.jsx'
+import { seaArt } from './art/sea.jsx'
+import { bugArt } from './art/bugs.jsx'
 
 const ART = {
   ...animalArt,
@@ -26,6 +31,11 @@ const ART = {
   ...alphabetArt,
   ...moreArt,
   ...propArt,
+  ...clothesArt,
+  ...veggieArt,
+  ...vehicleArt,
+  ...seaArt,
+  ...bugArt,
 }
 
 /**

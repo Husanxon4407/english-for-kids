@@ -64,10 +64,11 @@
   }
 }
 
-html,
+/* At least one screen tall, and taller when a page scrolls (the map), so the
+   sky behind it stretches all the way down instead of repeating. */
 body,
 #root {
-  height: 100%;
+  min-height: 100dvh;
 }
 
 /* Keep clear of the notch when a phone lies on its side. */

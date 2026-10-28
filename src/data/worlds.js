@@ -7,6 +7,11 @@ import { body } from './body.js'
 import { numbers } from './numbers.js'
 import { shapes } from './shapes.js'
 import { sky } from './sky.js'
+import { clothes } from './clothes.js'
+import { veggies } from './veggies.js'
+import { vehicles } from './vehicles.js'
+import { sea } from './sea.js'
+import { bugs } from './bugs.js'
 
 // The world map. Worlds with `items` are playable; the rest show as
 // "coming soon" so the map already hints at the bigger adventure.
@@ -138,7 +143,76 @@ export const worlds = [
       'Draw today’s weather and name it.',
     ],
   },
-  { id: 'island', name: 'Adventure Island', color: '#2dd4bf' },
+  {
+    id: 'clothes',
+    name: 'Clothes Closet',
+    intro: "Welcome to Clothes Closet! Let's get dressed!",
+    learnDone: ['Looking good!', 'You know all the clothes!'],
+    color: '#f472b6',
+    items: clothes,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'While getting dressed, name each thing as it goes on: “Socks! Shoes!”',
+      'Play “Put on your hat!” with real clothes, then swap roles.',
+      'Sort the laundry together and name each piece.',
+    ],
+  },
+  {
+    id: 'veggies',
+    name: 'Veggie Patch',
+    intro: "Welcome to Veggie Patch! Let's pick some vegetables!",
+    learnDone: ['Crunchy!', 'You know all the vegetables!'],
+    color: '#4ade80',
+    items: veggies,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'In the kitchen or at the market, point and ask: “What is it?” — “A carrot!”',
+      'At dinner, find a vegetable on the plate and say it in English.',
+      'Play shop with vegetables: “A tomato, please!” — “Thank you!”',
+    ],
+  },
+  {
+    id: 'vehicles',
+    name: 'Go Go Wheels',
+    intro: "Welcome to Go Go Wheels! Let's go for a ride!",
+    learnDone: ['Beep beep!', 'You know all the things that go!'],
+    color: '#facc15',
+    items: vehicles,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'On a walk or a ride, spot and name what goes by: “A bus!” “A bike!”',
+      'Make the sounds together: the bus says “Beep beep!”',
+      'Line up toy cars and say what each one is.',
+    ],
+  },
+  {
+    id: 'sea',
+    name: 'Under the Sea',
+    intro: "Welcome to Under the Sea! Let's swim with the sea animals!",
+    learnDone: ['Splash!', 'You know all the sea animals!'],
+    color: '#2dd4bf',
+    items: sea,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'At bath time, pretend to be a fish, a crab or an octopus and name it.',
+      'Draw the sea together and add a creature each: “A turtle!”',
+      'Walk sideways like a crab and say “Crab!”',
+    ],
+  },
+  {
+    id: 'bugs',
+    name: 'Bug Garden',
+    intro: "Welcome to Bug Garden! Let's find the little bugs!",
+    learnDone: ['Buzz buzz!', 'You know all the bugs!'],
+    color: '#a3e635',
+    items: bugs,
+    matchStyle: 'shadow',
+    tryAtHome: [
+      'Go on a bug hunt outside and whisper the names you find: “Ant!”',
+      'Move like the bugs: buzz like a bee, wiggle like a worm.',
+      'Look at a picture book and count the bugs together.',
+    ],
+  },
 ]
 
 export function getWorld(id) {
