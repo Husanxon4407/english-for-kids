@@ -44,6 +44,14 @@ export const SpeakerIcon = (p) => (
   </Icon>
 )
 
+export const MicIcon = (p) => (
+  <Icon {...p}>
+    <rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor" />
+    <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
+    <path d="M12 17.5V21M8.5 21h7" />
+  </Icon>
+)
+
 export const PlayIcon = (p) => (
   <Icon {...p}>
     <path d="M7 4.5v15l13-7.5z" fill="currentColor" />

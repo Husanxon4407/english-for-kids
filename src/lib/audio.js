@@ -86,6 +86,12 @@ function pickVoice() {
   return cachedVoice
 }
 
+/** Where the recording of a line is (already in memory if it was fetched ahead). */
+export function clipSrc(text) {
+  const src = clipFor(text)
+  return src && (fetched.get(src) || src)
+}
+
 if (typeof window !== 'undefined' && window.speechSynthesis) {
   // Voices load asynchronously in most browsers.
   window.speechSynthesis.onvoiceschanged = () => {

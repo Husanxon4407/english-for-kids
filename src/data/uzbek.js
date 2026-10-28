@@ -229,4 +229,7 @@ export const UZ_LINES = {
   quiz: 'Yulduzli sinov! Tingla va rasmni bos!',
   songs: "Keling, birga qo'shiq aytamiz!",
   stories: 'Ertak vaqti! Ertakni tanla!',
+  feed: "Bobo och! U so'ragan narsani unga ber!",
+  peekaboo: "Eshiklarni och va rasmni top!",
+  parrot: "Tingla, keyin mikrofonni bos va so'zni ayt!",
 }

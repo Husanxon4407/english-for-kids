@@ -230,6 +230,9 @@ function WorldProgress({ world, progress }) {
           <span>Memory: {activities[`${world.id}:memory`] || 0}×</span>
           <span>Puzzle: {activities[`${world.id}:puzzle`] || 0}×</span>
           <span>Balloons: {activities[`${world.id}:balloon`] || 0}×</span>
+          <span>Feed Bobo: {activities[`${world.id}:feed`] || 0}×</span>
+          <span>Peekaboo: {activities[`${world.id}:peekaboo`] || 0}×</span>
+          <span>Parrot: {activities[`${world.id}:parrot`] || 0}×</span>
           <span>
             Star challenge: {activities[`${world.id}:quiz`] || 0}×
             {progress.medals[world.id] ? ` — best medal: ${progress.medals[world.id]}` : ''}
@@ -394,6 +397,23 @@ export default function ParentCorner({ onBack }) {
             </Choice>
             <Choice selected={!settings.music} onClick={() => setSetting('music', false)}>
               Off
+            </Choice>
+          </div>
+
+          <h3 className="mb-2 mt-6 font-bold">Speaking check (Parrot game)</h3>
+          <p className="mb-2 text-sm text-slate-500">
+            In the Parrot game your child says each word into the microphone and Bobo checks it. Where this device can
+            recognise speech by itself, nothing leaves the device. Otherwise the browser can send the short recording to
+            its own service (Google in Chrome, Apple in Safari) to hear the word. WordLand never stores or keeps any recording.
+          </p>
+          <div role="radiogroup" aria-label="Speaking check" className="grid grid-cols-2 gap-3">
+            <Choice selected={settings.speechOnline !== false} onClick={() => setSetting('speechOnline', true)}>
+              <span className="block font-bold">On this device or online</span>
+              <span className="block text-sm text-slate-500">Works on almost every phone and computer.</span>
+            </Choice>
+            <Choice selected={settings.speechOnline === false} onClick={() => setSetting('speechOnline', false)}>
+              <span className="block font-bold">Only on this device</span>
+              <span className="block text-sm text-slate-500">Nothing is sent. Where the device can't check, the parrot just repeats your child.</span>
             </Choice>
           </div>
 

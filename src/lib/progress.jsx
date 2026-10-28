@@ -24,7 +24,9 @@ const EMPTY = {
   medals: {},
   // `helper` is the spoken language help: 'off' or 'uz' (Uzbek). `music` is the
   // soft background music; `sound` switches everything off.
-  settings: { difficulty: 'explorer', sound: true, music: true, voiceSpeed: 'normal', helper: defaultHelper() },
+  // `speechOnline` lets the Parrot game check speaking with the browser's online
+  // service when the device cannot do it by itself.
+  settings: { difficulty: 'explorer', sound: true, music: true, voiceSpeed: 'normal', helper: defaultHelper(), speechOnline: true },
 }
 
 // Profile pictures children recognize instantly — no names needed.

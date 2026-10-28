@@ -9,6 +9,9 @@ import MemoryGame from './games/MemoryGame.jsx'
 import PuzzleGame from './games/PuzzleGame.jsx'
 import StarQuiz from './games/StarQuiz.jsx'
 import BalloonGame from './games/BalloonGame.jsx'
+import FeedGame from './games/FeedGame.jsx'
+import PeekabooGame from './games/PeekabooGame.jsx'
+import ParrotGame from './games/ParrotGame.jsx'
 import ParentCorner from './pages/ParentCorner.jsx'
 import Shelf from './pages/Shelf.jsx'
 import StoryPlayer from './pages/StoryPlayer.jsx'
@@ -60,7 +63,8 @@ export default function App() {
     setMusicEnabled(settings.sound, settings.music)
   }, [settings.sound, settings.music])
   useEffect(() => {
-    const quiet = ['song', 'gate', 'parent'].includes(nav.screen)
+    // Quiet in Parrot too, so the microphone hears only the child.
+    const quiet = ['song', 'gate', 'parent', 'parrot'].includes(nav.screen)
     playMusic(quiet ? null : nav.screen === 'story' ? 'story' : 'play')
   }, [nav.screen])
 
@@ -99,6 +103,12 @@ export default function App() {
       return <PuzzleGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
     case 'balloon':
       return <BalloonGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
+    case 'feed':
+      return <FeedGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
+    case 'peekaboo':
+      return <PeekabooGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
+    case 'parrot':
+      return <ParrotGame world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
     case 'quiz':
       return <StarQuiz world={world} onBack={() => go('world', { worldId: world.id })} onHome={home} />
     case 'learn':

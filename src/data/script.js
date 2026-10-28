@@ -31,6 +31,9 @@ export const SCRIPT = {
     puzzle: 'Puzzle time!',
     quiz: 'Star challenge!',
     balloon: 'Pop the balloon!',
+    feed: 'Feed Bobo!',
+    peekaboo: 'Peekaboo!',
+    parrot: 'Parrot time!',
   },
 
   // Learn a word
@@ -66,6 +69,22 @@ export const SCRIPT = {
 
   // Balloon game
   balloonIntro: ['Pop the balloon!', 'Listen and pop!'],
+
+  // Feed Bobo: he asks for a picture and eats it (or hugs it, if it is not food).
+  feedIntro: ["I'm hungry!", 'Give me what I ask for!'],
+  feedYum: 'Yum yum!',
+  feedHug: 'Thank you!',
+  feedNo: 'Hmm, not that one!',
+
+  // Peekaboo: pictures hide behind doors.
+  peekabooIntro: ['Peekaboo!', 'Open the doors and find it!'],
+  peekabooFound: 'Peekaboo!',
+
+  // Parrot: the child says the word.
+  parrotIntro: ['Parrot time!', 'Listen. Then tap the microphone and say it!'],
+  parrotAgain: ["Almost! Let's try again!"],
+  parrotGoodTry: 'Good try!',
+  parrotNeedMic: 'Ask a grown-up to let me hear you!',
 
   // Star challenge: one try per word, a medal at the end — never a bad result.
   quizIntro: ['Star challenge!', 'Listen and tap!'],

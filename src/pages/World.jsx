@@ -21,6 +21,9 @@ const ACTIVITIES = [
   { id: 'memory', name: SCRIPT.activities.memory, color: '#a78bfa' },
   { id: 'puzzle', name: SCRIPT.activities.puzzle, color: '#34d399' },
   { id: 'balloon', name: SCRIPT.activities.balloon, color: '#f43f5e' },
+  { id: 'feed', name: SCRIPT.activities.feed, color: '#2ec4b6' },
+  { id: 'peekaboo', name: SCRIPT.activities.peekaboo, color: '#f97316' },
+  { id: 'parrot', name: SCRIPT.activities.parrot, color: '#22c55e' },
   { id: 'quiz', name: SCRIPT.activities.quiz, color: '#fbbf24' },
   { id: 'song', name: SCRIPT.songTime, color: '#ec4899' },
 ]
@@ -77,11 +80,12 @@ export default function World({ world, onBack, onHome, onLearn, onPlay, welcome 
         <Mascot size="sm" talking={speaking} waving={welcome} onClick={() => speak(intro)} />
       </TopBar>
 
-      {/* Two rows of big activity cards, then the world's words. Everything is
-          made of squares, so the width is capped by the room under the top bar;
-          a sideways phone gets one row of each. */}
-      <main className="mx-auto flex w-full max-w-[max(16rem,min(48rem,calc((var(--room)-2.5rem)*1.08)))] flex-1 flex-col justify-center gap-5 p-4 sm:max-w-[min(62rem,calc((var(--room)-4.5rem)*1.6))] sm:gap-7 sm:p-6 short:max-w-[calc((var(--room)-1rem)*4.2)] short:gap-3 short:px-4 short:py-2">
-        <section className="grid grid-cols-4 gap-3 sm:gap-5 short:grid-cols-8 short:gap-3">
+      {/* The activity cards (three rows of four on a phone, two rows of six on a
+          tablet or a phone held sideways), then the world's words.
+          Everything is made of squares, so the width is capped by the room
+          under the top bar. */}
+      <main className="mx-auto flex w-full max-w-[max(16rem,min(48rem,calc((var(--room)-2.5rem)*0.85)))] flex-1 flex-col justify-center gap-5 p-4 sm:max-w-[min(62rem,calc((var(--room)-4.5rem)*2.1))] sm:gap-7 sm:p-6 short:max-w-[calc((var(--room)-3rem)*2.3)] short:gap-3 short:px-4 short:py-2">
+        <section className="grid grid-cols-4 gap-3 sm:grid-cols-6 sm:gap-5 short:grid-cols-6 short:gap-2">
           {activities.map((activity, i) => {
             const plays = progress.activities[`${world.id}:${activity.id}`] || 0
             const medal = activity.id === 'quiz' ? progress.medals[world.id] : null
@@ -91,10 +95,10 @@ export default function World({ world, onBack, onHome, onLearn, onPlay, welcome 
                 type="button"
                 aria-label={activity.name}
                 onClick={() => openActivity(activity)}
-                className="animate-bounce-in relative rounded-3xl bg-white p-2 shadow-lg transition-transform active:scale-95 sm:rounded-[2rem] sm:p-4"
+                className="animate-bounce-in relative rounded-3xl bg-white p-2 shadow-lg transition-transform active:scale-95 sm:rounded-[2rem] sm:p-4 short:rounded-2xl short:p-1.5"
                 style={{ borderBottom: `8px solid ${activity.color}`, animationDelay: `${i * 80}ms` }}
               >
-                <div className="aspect-square rounded-2xl p-1.5 sm:rounded-3xl sm:p-3" style={{ backgroundColor: `${activity.color}26` }}>
+                <div className="aspect-square rounded-2xl p-1.5 sm:rounded-3xl sm:p-3 short:rounded-xl short:p-1" style={{ backgroundColor: `${activity.color}26` }}>
                   <ActivityPicture id={activity.id} items={world.items} matchStyle={world.matchStyle} medal={medal} />
                 </div>
                 {plays > 0 && !medal && (

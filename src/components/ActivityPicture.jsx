@@ -1,7 +1,9 @@
 import ItemArt from './ItemArt.jsx'
 import PictureTile from './PictureTile.jsx'
 import Medal from './Medal.jsx'
-import { NoteIcon, SpeakerIcon, StarIcon } from './Icons.jsx'
+import { MicIcon, NoteIcon, SpeakerIcon, StarIcon } from './Icons.jsx'
+import { Bobo } from './Mascot.jsx'
+import { Door, Parrot } from './GameArt.jsx'
 import { targetLook } from '../lib/matchLook.js'
 
 // A pointing hand, used to show "tap here" without any words.
@@ -97,6 +99,36 @@ export default function ActivityPicture({ id, items, matchStyle, medal }) {
           </div>
           <StarIcon className="absolute right-0 top-[4%] h-[30%] w-[30%]" />
           <Hand className="absolute bottom-0 right-[4%] w-[40%]" style={{ animation: 'wl-tap 1.3s ease-in-out infinite' }} />
+        </div>
+      )
+    // Feed Bobo: a picture slides over to Bobo.
+    case 'feed':
+      return (
+        <div className="relative h-full w-full">
+          <Bobo mood="wow" className="absolute bottom-0 right-0 w-[62%]" />
+          <div className="absolute left-0 top-[18%] w-[42%]" style={{ animation: 'wl-slide 2s ease-in-out infinite' }}>
+            <Tile id={c.id} className="w-full" />
+          </div>
+        </div>
+      )
+    // Peekaboo: a door keeps peeking open to show what hides behind it.
+    case 'peekaboo':
+      return (
+        <div className="relative mx-auto aspect-square h-full">
+          <Tile id={b.id} className="absolute inset-[8%] h-[84%] w-[84%]" />
+          <span className="absolute inset-[8%] origin-left" style={{ animation: 'wl-peek 2.6s ease-in-out infinite' }}>
+            <Door index={3} className="h-full w-full" />
+          </span>
+        </div>
+      )
+    // Parrot: the parrot listens, with the microphone to tap.
+    case 'parrot':
+      return (
+        <div className="relative h-full w-full">
+          <Parrot mood="talk" className="absolute bottom-0 left-0 h-full w-[72%]" style={{ animation: 'wl-sway 1.6s ease-in-out infinite' }} />
+          <span className="absolute bottom-[4%] right-0 flex h-[40%] w-[40%] items-center justify-center rounded-full bg-red-400 text-white shadow" style={{ animation: 'wl-hop 1s ease-in-out infinite' }}>
+            <MicIcon className="h-[66%] w-[66%]" />
+          </span>
         </div>
       )
     // Star challenge: the medal you can win (or the one already won).
