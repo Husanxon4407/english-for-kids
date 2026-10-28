@@ -14,6 +14,10 @@ import { pop } from '../lib/sfx.js'
 import { songItem } from '../data/songs.js'
 
 const SONG_STARS = 2
+// The recordings are a little quick for small children: play them slower,
+// keeping the singers' own (bright, playful) pitch. The cues follow the
+// song's own clock, so the pictures stay in time.
+const SONG_SPEED = 0.92
 
 // The cue at `time`: the last one that has started. A cue is
 // [seconds, picture ids, { bobo }], where `bobo` is what Bobo does then.
@@ -77,6 +81,9 @@ export default function SongPlayer({ song, onBack, onHome }) {
     stopSpeaking()
     const audio = new Audio(import.meta.env.BASE_URL + song.file)
     audio.preload = 'auto'
+    audio.preservesPitch = true
+    audio.defaultPlaybackRate = SONG_SPEED
+    audio.playbackRate = SONG_SPEED
     audio.muted = isMuted()
     audioRef.current = audio
 
