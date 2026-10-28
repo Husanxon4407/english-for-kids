@@ -8,6 +8,8 @@ import { useSpeaker } from '../lib/useSpeaker.js'
 import { useProgress } from '../lib/progress.jsx'
 import { SCRIPT } from '../data/script.js'
 import { songForWorld } from '../data/songs.js'
+import { preload } from '../lib/audio.js'
+import { useUzbek } from '../lib/uzbek.js'
 
 // The activities in each world (the song only where the world has one).
 // Moving pictures (not text) tell children what each one is, and tapping
@@ -35,11 +37,31 @@ export default function World({ world, onBack, onHome, onLearn, onPlay, welcome 
   // The hand points at the next thing to try: learning first, then a game.
   const hintId = progress.activities[`${world.id}:learn`] ? 'listen' : 'learn'
 
+  const uz = useUzbek()
+
   useEffect(() => {
     speak(intro)
     const timer = setTimeout(() => setHint(true), HINT_AFTER)
     return () => clearTimeout(timer)
   }, [])
+
+  // Fetch everything this world's activities say while the child is still
+  // choosing, so no word starts late on a slow connection.
+  useEffect(() => {
+    preload([
+      ...activities.map((a) => a.name),
+      SCRIPT.whatsThis,
+      ...world.items.flatMap((item) => [
+        SCRIPT.word(item),
+        item.phrase,
+        SCRIPT.canYouSay(item),
+        item.prompt,
+        item.sound && SCRIPT.says(item),
+        item.sound,
+        ...uz.word(item),
+      ]),
+    ])
+  }, [world, uz])
 
   async function openActivity(activity) {
     setHint(false)

@@ -11,6 +11,7 @@ import { RepeatIcon } from '../components/Icons.jsx'
 import { useProgress } from '../lib/progress.jsx'
 import { canPractice } from '../lib/review.js'
 import { useUzbek } from '../lib/uzbek.js'
+import { preload } from '../lib/audio.js'
 
 // Two places that are not word worlds: they mix words from all of them.
 const SPECIAL = [
@@ -28,6 +29,12 @@ export default function WorldMap({ onHome, onOpenWorld, onPractice, onStories, o
   useEffect(() => {
     speak(prompt)
   }, [speak])
+
+  // Fetch what Bobo says when a card is tapped and in the first moment of each
+  // world, so he is not late on a slow connection.
+  useEffect(() => {
+    preload([SCRIPT.storyTime, SCRIPT.songTime, SCRIPT.practice, ...worlds.flatMap((w) => [`${w.name}!`, w.intro])])
+  }, [])
 
   async function practice() {
     await speak(SCRIPT.practice)

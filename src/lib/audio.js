@@ -23,6 +23,34 @@ const NORMAL_RATE = 0.8
 // Reuse audio elements so a clip only downloads once.
 const clipCache = new Map()
 
+// Clips fetched ahead of time (see `preload`), kept in memory as blob URLs so
+// the first line in a world plays at once even on a slow connection.
+const fetched = new Map() // src -> blob URL once it has arrived
+const fetching = new Set()
+
+function fetchAhead(src) {
+  if (!src || fetched.has(src) || fetching.has(src) || clipCache.has(src)) return
+  fetching.add(src)
+  fetch(src)
+    .then((response) => (response.ok ? response.blob() : null))
+    .then((blob) => {
+      if (blob) fetched.set(src, URL.createObjectURL(blob))
+    })
+    .catch(() => {}) // no matter: the clip simply downloads when it is played
+    .finally(() => fetching.delete(src))
+}
+
+/**
+ * Download the recordings of these lines in the background, so they are ready
+ * before they are needed. Lines can also be { src } clips (the Uzbek helper).
+ */
+export function preload(lines) {
+  for (const line of lines) {
+    if (!line) continue
+    fetchAhead(typeof line === 'string' ? clipFor(line) : line.src)
+  }
+}
+
 function clipFor(text) {
   const file = manifest.lines?.[voiceKey(text)]
   if (file) return import.meta.env.BASE_URL + file
@@ -134,7 +162,7 @@ function playClip(src) {
   return new Promise((resolve, reject) => {
     let audio = clipCache.get(src)
     if (!audio) {
-      audio = new Audio(src)
+      audio = new Audio(fetched.get(src) || src)
       clipCache.set(src, audio)
     }
     audio.currentTime = 0
