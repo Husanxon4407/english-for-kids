@@ -186,7 +186,7 @@ function Actor({ actor, talking }) {
         transform: 'translate(-50%, -50%)',
         transition: ['left', 'top', 'width', 'opacity'].map((p) => `${p} ${move}s ${p === 'opacity' ? 'ease-in' : 'ease-in-out'} ${delay}s`).join(', '),
         // Whoever stands lower on the stage is nearer, so is drawn in front.
-        zIndex: Math.round(y),
+        zIndex: actor.z ?? Math.round(y),
       }}
     >
       <div className="relative" style={{ animation: `${ENTER[from]} ${delay}s both` }}>
@@ -196,7 +196,7 @@ function Actor({ actor, talking }) {
             <div className="relative" style={{ animation: ACT[act] && `${ACT[act]} ${actor.actAt || 0}s`, transform: act === 'sleep' ? 'rotate(8deg)' : undefined }}>
               <div className="relative isolate" style={{ transform: flip ? 'scaleX(-1)' : undefined }}>
                 {isBobo ? (
-                  <Bobo talking={talking && actor.talk} waving={act === 'wave'} mood={mood} className="h-auto w-full drop-shadow-md" />
+                  <Bobo talking={talking && actor.talk} waving={act === 'wave'} mood={mood} arms={actor.arms} className="h-auto w-full drop-shadow-md" />
                 ) : (
                   <ItemArt id={id} className="h-auto w-full drop-shadow-md" />
                 )}

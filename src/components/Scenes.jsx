@@ -213,7 +213,147 @@ function Party() {
   )
 }
 
-const SCENES = { garden: Garden, room: Room, night: () => <Room night />, hill: Hill, party: Party }
+// The seaside: sand in front, the sea rolling behind (the sea's actors stand in the water).
+function Beach() {
+  return (
+    <>
+      <rect width="400" height="300" fill="#bae6fd" />
+      <Cloud x={60} y={30} />
+      <Cloud x={250} y={50} scale={0.7} seconds={60} opacity={0.8} />
+      <circle cx="340" cy="54" r="26" fill="#fde047" />
+      <rect y="120" width="400" height="110" fill="#38bdf8" />
+      {[0, 1, 2].map((i) => (
+        <path key={i} d={`M-40 ${132 + i * 30} q25 -10 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0`} fill="none" stroke="#e0f2fe" strokeWidth="4" strokeLinecap="round" opacity="0.8">
+          <animateTransform attributeName="transform" type="translate" values={`0 0;${i % 2 ? -50 : 50} 0;0 0`} dur={`${5 + i}s`} repeatCount="indefinite" />
+        </path>
+      ))}
+      <path d="M0 220 Q100 206 200 216 T400 210 L400 300 L0 300 Z" fill="#fde68a" />
+      <path d="M0 226 Q100 214 200 222 T400 218" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity="0.7">
+        <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" repeatCount="indefinite" />
+      </path>
+      <circle cx="40" cy="276" r="5" fill="#fb923c" />
+      <circle cx="360" cy="284" r="4" fill="#f472b6" />
+    </>
+  )
+}
+
+// A town street with houses and a bus stop.
+function Street() {
+  return (
+    <>
+      <rect width="400" height="300" fill="#bfe6ff" />
+      <Cloud x={30} y={30} />
+      <Cloud x={220} y={20} scale={0.8} seconds={56} opacity={0.8} />
+      {[[10, 110, '#fca5a5'], [100, 90, '#fde68a'], [190, 120, '#a5b4fc'], [290, 100, '#86efac']].map(([x, h, c]) => (
+        <g key={x}>
+          <rect x={x} y={200 - h} width="80" height={h} fill={c} />
+          <path d={`M${x - 6} ${200 - h} L${x + 40} ${170 - h} L${x + 86} ${200 - h} Z`} fill="#b45309" />
+          <rect x={x + 14} y={220 - h} width="18" height="18" rx="2" fill="#fff" />
+          <rect x={x + 48} y={220 - h} width="18" height="18" rx="2" fill="#fff" />
+        </g>
+      ))}
+      <rect y="200" width="400" height="20" fill="#cbd5e1" />
+      <rect y="220" width="400" height="80" fill="#64748b" />
+      {Array.from({ length: 7 }, (_, i) => (
+        <rect key={i} x={10 + i * 60} y="258" width="34" height="6" rx="3" fill="#fef9c3" />
+      ))}
+      {/* the bus stop */}
+      <rect x="352" y="140" width="6" height="64" fill="#475569" />
+      <circle cx="355" cy="134" r="14" fill="#facc15" stroke="#475569" strokeWidth="3" />
+      <text x="355" y="139" textAnchor="middle" fontSize="13" fontWeight="900" fill="#475569" fontFamily="sans-serif">
+        B
+      </text>
+    </>
+  )
+}
+
+// A jungle with palm trees and a smoking volcano (Dino Valley).
+function Jungle() {
+  return (
+    <>
+      <rect width="400" height="300" fill="#fef3c7" />
+      <path d="M220 200 L290 70 L330 70 L400 200 Z" fill="#a16207" />
+      <path d="M290 70 L330 70 L322 86 Q310 78 298 86 Z" fill="#ef4444" />
+      {[0, 1, 2].map((i) => (
+        <circle key={i} cx="310" cy="60" r="10" fill="#94a3b8" opacity="0.8">
+          <animate attributeName="cy" values="64;8" dur="3.5s" begin={`${i * 1.2}s`} repeatCount="indefinite" />
+          <animate attributeName="r" values="8;24" dur="3.5s" begin={`${i * 1.2}s`} repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0" dur="3.5s" begin={`${i * 1.2}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+      <path d="M0 180 Q100 150 200 176 T400 170 L400 300 L0 300 Z" fill="#84cc16" />
+      <path d="M0 210 Q120 186 240 206 T400 200 L400 300 L0 300 Z" fill="#65a30d" />
+      {[30, 180].map((x, i) => (
+        <g key={x}>
+          <path d={`M${x} 230 Q${x - 6} 170 ${x + 8} 120`} fill="none" stroke="#92400e" strokeWidth="10" strokeLinecap="round" />
+          <g>
+            {[-50, -10, 30, 70, 110].map((a) => (
+              <path key={a} d={`M${x + 8} 120 q${Math.cos((a * Math.PI) / 180) * 34} ${-Math.sin((a * Math.PI) / 180) * 34 - 8} ${Math.cos((a * Math.PI) / 180) * 58} ${-Math.sin((a * Math.PI) / 180) * 58 + 16}`} fill="none" stroke="#16a34a" strokeWidth="9" strokeLinecap="round" />
+            ))}
+            <animateTransform attributeName="transform" type="rotate" values={`-2 ${x + 8} 120;2 ${x + 8} 120;-2 ${x + 8} 120`} dur={`${3 + i}s`} repeatCount="indefinite" />
+          </g>
+        </g>
+      ))}
+    </>
+  )
+}
+
+// A classroom: a board, a window and the floor.
+function Classroom() {
+  return (
+    <>
+      <rect width="400" height="300" fill="#e0f2fe" />
+      <rect x="30" y="40" width="170" height="100" rx="6" fill="#166534" stroke="#a16207" strokeWidth="8" />
+      <text x="115" y="84" textAnchor="middle" fontSize="26" fontWeight="800" fill="#fff" fontFamily="sans-serif" opacity="0.9">
+        A B C
+      </text>
+      <text x="115" y="118" textAnchor="middle" fontSize="22" fontWeight="800" fill="#fde047" fontFamily="sans-serif" opacity="0.9">
+        1 2 3
+      </text>
+      <rect x="250" y="40" width="110" height="90" rx="6" fill="#bae6fd" stroke="#fff" strokeWidth="8" />
+      <path d="M305 40 L305 130 M250 85 L360 85" stroke="#fff" strokeWidth="6" />
+      <Cloud x={250} y={56} scale={0.4} seconds={30} />
+      {['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#a855f7'].map((c, i) => (
+        <path key={c} d={`M${20 + i * 80} 18 L${60 + i * 80} 18 L${40 + i * 80} 34 Z`} fill={c} opacity="0.8" />
+      ))}
+      <rect y="196" width="400" height="104" fill="#fcd34d" />
+      <rect y="196" width="400" height="8" fill="#d97706" />
+    </>
+  )
+}
+
+// A snowy day outside, with snow falling.
+function Snow() {
+  return (
+    <>
+      <rect width="400" height="300" fill="#dbeafe" />
+      <path d="M0 170 Q100 140 210 166 T400 160 L400 300 L0 300 Z" fill="#fff" />
+      <path d="M0 200 Q120 180 240 196 T400 192 L400 300 L0 300 Z" fill="#f1f5f9" />
+      <path d="M300 170 L330 110 L360 170 Z" fill="#15803d" />
+      <path d="M306 140 L330 92 L354 140 Z" fill="#16a34a" />
+      <path d="M318 112 L330 86 L342 112 Z" fill="#fff" />
+      {Array.from({ length: 28 }, (_, i) => (
+        <circle key={i} cx={(i * 53) % 400} cy="-10" r={2 + (i % 3)} fill="#fff">
+          <animate attributeName="cy" values="-10;310" dur={`${5 + (i % 5)}s`} begin={`-${(i * 0.7) % 6}s`} repeatCount="indefinite" />
+          <animate attributeName="cx" values={`${(i * 53) % 400};${((i * 53) % 400) + 14};${(i * 53) % 400}`} dur="3s" repeatCount="indefinite" />
+        </circle>
+      ))}
+    </>
+  )
+}
+
+const SCENES = {
+  garden: Garden,
+  room: Room,
+  night: () => <Room night />,
+  hill: Hill,
+  party: Party,
+  beach: Beach,
+  street: Street,
+  jungle: Jungle,
+  classroom: Classroom,
+  snow: Snow,
+}
 
 export default function Scene({ name, className = '' }) {
   const Backdrop = SCENES[name] || Garden

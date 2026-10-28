@@ -142,7 +142,8 @@ function Balloons() {
   )
 }
 
-function Sunburst() {
+// Turning rays with rising bubbles: letters for the alphabet song, stars (`stars`) for a party.
+function Sunburst({ stars = false }) {
   return (
     <>
       <rect width="400" height="240" fill="#fecaca" />
@@ -157,9 +158,13 @@ function Sunburst() {
       {['A', 'B', 'C'].map((letter, i) => (
         <Riser key={letter} x={50 + i * 150} seconds={11 + i * 2} delay={i * 3.5}>
           <circle r="16" fill="#fff" opacity="0.85" />
-          <text y="7" textAnchor="middle" fontSize="20" fontWeight="800" fill={['#ef4444', '#3b82f6', '#22c55e'][i]}>
-            {letter}
-          </text>
+          {stars ? (
+            <path d="M0 -11 L3 -4 L11 -4 L5 1 L7 9 L0 4 L-7 9 L-5 1 L-11 -4 L-3 -4 Z" fill={['#f59e0b', '#ec4899', '#22c55e'][i]} />
+          ) : (
+            <text y="7" textAnchor="middle" fontSize="20" fontWeight="800" fill={['#ef4444', '#3b82f6', '#22c55e'][i]}>
+              {letter}
+            </text>
+          )}
         </Riser>
       ))}
     </>
@@ -281,12 +286,125 @@ function Dots() {
   )
 }
 
+// The Wheels on the Bus: a town road whose stripes roll by.
+function Road() {
+  return (
+    <>
+      <rect width="400" height="240" fill="#bae6fd" />
+      <Sun x={60} y={44} />
+      <Cloud x={160} y={30} seconds={30} />
+      <Cloud x={300} y={58} scale={0.7} seconds={40} opacity={0.8} />
+      {[[200, 90, '#fca5a5'], [250, 70, '#fde68a'], [300, 100, '#a5b4fc'], [345, 80, '#86efac']].map(([x, h, c]) => (
+        <g key={x}>
+          <rect x={x} y={170 - h} width="40" height={h} rx="4" fill={c} />
+          {[0, 1, 2].map((r) => (
+            <rect key={r} x={x + 8} y={170 - h + 10 + r * 22} width="9" height="10" rx="2" fill="#fff" opacity={r * 22 + 20 < h ? 0.9 : 0} />
+          ))}
+        </g>
+      ))}
+      <rect y="168" width="400" height="72" fill="#64748b" />
+      <rect y="166" width="400" height="6" fill="#94a3b8" />
+      <g>
+        {Array.from({ length: 9 }, (_, i) => (
+          <rect key={i} x={i * 60} y="202" width="34" height="6" rx="3" fill="#fef9c3" />
+        ))}
+        <animateTransform attributeName="transform" type="translate" from="0 0" to="-60 0" dur="0.9s" repeatCount="indefinite" />
+      </g>
+    </>
+  )
+}
+
+// I'm a Water Baby: deep blue water with rising bubbles and swaying weed.
+function Underwater() {
+  return (
+    <>
+      <rect width="400" height="240" fill="#0ea5e9" />
+      <rect y="120" width="400" height="120" fill="#0284c7" opacity="0.6" />
+      <path d="M0 14 Q50 0 100 14 T200 14 T300 14 T400 14 L400 0 L0 0 Z" fill="#bae6fd" opacity="0.7">
+        <animateTransform attributeName="transform" type="translate" values="0 0;-25 3;0 0" dur="4s" repeatCount="indefinite" />
+      </path>
+      <path d="M0 220 Q60 200 120 214 T240 210 T400 214 L400 240 L0 240 Z" fill="#fde68a" />
+      {[30, 90, 300, 360].map((x, i) => (
+        <path key={x} d={`M${x} 226 q-10 -24 0 -46 q10 -22 0 -44`} fill="none" stroke="#22c55e" strokeWidth="7" strokeLinecap="round">
+          <animateTransform attributeName="transform" type="rotate" values={`-5 ${x} 226;5 ${x} 226;-5 ${x} 226`} dur={`${3 + i * 0.4}s`} repeatCount="indefinite" />
+        </path>
+      ))}
+      {[50, 140, 210, 270, 340].map((x, i) => (
+        <Riser key={x} x={x} seconds={6 + (i % 3) * 2} delay={i * 1.3}>
+          <circle r={4 + (i % 3) * 3} fill="none" stroke="#e0f2fe" strokeWidth="2.5" />
+        </Riser>
+      ))}
+    </>
+  )
+}
+
+// Rockin' with the Dinosaurs: a jungle with ferns and a smoking volcano.
+function Jungle() {
+  return (
+    <>
+      <rect width="400" height="240" fill="#fde68a" />
+      <rect y="0" width="400" height="120" fill="#fcd34d" opacity="0.5" />
+      <path d="M220 170 L280 70 L320 70 L380 170 Z" fill="#a16207" />
+      <path d="M280 70 L320 70 L312 84 Q300 76 288 84 Z" fill="#ef4444" />
+      {[0, 1, 2].map((i) => (
+        <circle key={i} cx="300" cy="56" r="12" fill="#94a3b8" opacity="0.8">
+          <animate attributeName="cy" values="60;10" dur="3s" begin={`${i}s`} repeatCount="indefinite" />
+          <animate attributeName="r" values="8;22" dur="3s" begin={`${i}s`} repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0" dur="3s" begin={`${i}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+      <Hills back="#65a30d" front="#4d7c0f" />
+      {[40, 150].map((x, i) => (
+        <g key={x}>
+          <path d={`M${x} 200 Q${x - 4} 150 ${x + 6} 110`} fill="none" stroke="#92400e" strokeWidth="8" strokeLinecap="round" />
+          <g>
+            {[-60, -20, 20, 60, 100].map((a) => (
+              <path key={a} d={`M${x + 6} 110 q${Math.cos((a * Math.PI) / 180) * 30} ${-Math.sin((a * Math.PI) / 180) * 30 - 6} ${Math.cos((a * Math.PI) / 180) * 50} ${-Math.sin((a * Math.PI) / 180) * 50 + 14}`} fill="none" stroke="#16a34a" strokeWidth="7" strokeLinecap="round" />
+            ))}
+            <animateTransform attributeName="transform" type="rotate" values={`-3 ${x + 6} 110;3 ${x + 6} 110;-3 ${x + 6} 110`} dur={`${2.6 + i}s`} repeatCount="indefinite" />
+          </g>
+        </g>
+      ))}
+    </>
+  )
+}
+
+// Ants: a garden of flowers swaying in the grass.
+function Garden() {
+  const petals = ['#f472b6', '#facc15', '#a78bfa', '#fb923c']
+  return (
+    <>
+      <rect width="400" height="240" fill="#dcfce7" />
+      <Sun />
+      <Cloud x={60} y={36} seconds={50} />
+      <Hills back="#86efac" front="#4ade80" />
+      {[30, 90, 160, 230, 290, 360].map((x, i) => (
+        <g key={x}>
+          <path d={`M${x} 236 L${x} ${176 - (i % 3) * 12}`} stroke="#15803d" strokeWidth="4" />
+          <g transform={`translate(${x} ${176 - (i % 3) * 12})`}>
+            {[0, 72, 144, 216, 288].map((a) => (
+              <ellipse key={a} cx="0" cy="-9" rx="6" ry="10" fill={petals[i % petals.length]} transform={`rotate(${a})`} />
+            ))}
+            <circle r="5" fill="#fde047" />
+            <animateTransform attributeName="transform" type="rotate" values="-8;8;-8" dur={`${2 + (i % 3) * 0.5}s`} additive="sum" repeatCount="indefinite" />
+          </g>
+        </g>
+      ))}
+    </>
+  )
+}
+
 const STAGES = {
+  road: Road,
+  underwater: Underwater,
+  jungle: Jungle,
+  garden: Garden,
   night: Night,
   farm: Farm,
   orchard: Orchard,
   balloons: Balloons,
   sunburst: Sunburst,
+  party: () => <Sunburst stars />,
   castle: Castle,
   rainbow: Rainbow,
   windy: Windy,

@@ -44,6 +44,9 @@ const SEVEN_TO_TEN = ['seven', 'eight', 'nine', 'ten']
 
 const HOME = ['bed', 'chair', 'table', 'door', 'window', 'lamp']
 const COLORS = ['red', 'orange-color', 'yellow', 'green', 'blue', 'purple']
+const VEG_COLORS = ['tomato', 'carrot', 'corn', 'pepper', 'broccoli', 'peas']
+const SEA_FRIENDS = ['whale', 'dolphin', 'turtle', 'octopus']
+const SCHOOL_THINGS = ['bag', 'book', 'pencil', 'crayon']
 
 // What Bobo does when a word of the alphabet song is sung.
 const ALPHABET_MOVES = { jump: 'jump', kite: 'run', rain: 'shake', train: 'run', van: 'run', moon: 'sway', whale: 'sway', queen: 'wave' }
@@ -366,6 +369,303 @@ export const songs = [
       [46.5, ['hands'], { bobo: 'clap' }], // "pop, pop, pop"
       [50, ['hands', 'feet', 'eyes', 'ears'], { bobo: 'jump' }],
       [54, ['hands', 'feet', 'eyes', 'ears'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'wheels',
+    title: 'The Wheels on the Bus',
+    file: 'music/wheels.mp3',
+    cover: 'bus',
+    color: '#facc15',
+    world: 'vehicles',
+    stage: 'road',
+    credit: { artist: 'matthewmikemusic', url: 'https://pixabay.com/music/happy-childrens-tunes-wheels-on-the-bus-male-vocals-60-seconds-371022/' },
+    cues: [
+      [0, ['bus']],
+      [3, ['bus'], { bobo: 'spin' }], // "the wheels on the bus go round and round"
+      [15.5, ['bus', 'brother', 'sister'], { bobo: 'jump' }], // "the kids on the bus go up and down"
+      [26.5, ['bus', 'dad'], { bobo: 'wave' }], // "the driver on the bus says move on back"
+      [37.5, ['bus', 'rain'], { bobo: 'sway' }], // "the wipers on the bus go swish, swish, swish"
+      [48, ['bus'], { bobo: 'spin' }], // "the wheels on the bus go round and round"
+      [55, ['bus', 'car', 'taxi', 'truck'], { bobo: 'wave' }], // "all through the town"
+    ],
+  },
+  {
+    id: 'whatican',
+    title: 'What I Can Do',
+    file: 'music/whatican.mp3',
+    cover: 'jump',
+    color: '#f97316',
+    world: 'actions',
+    stage: 'party',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-what-i-can-do-301853/' },
+    cues: [
+      [0, ['walk', 'jump', 'swim', 'climb']],
+      [6, ['walk'], { bobo: 'sway' }], // "I can walk, walk"
+      [12.5, ['walk'], { bobo: 'nod' }], // "I can bob"
+      [16, ['jump'], { bobo: 'jump' }], // "I can jump, jump"
+      [19.5, ['jump', 'dance'], { bobo: 'spin' }], // "I can turn, turn"
+      [26, ['swim'], { bobo: 'sway' }], // "I can swim, swim"
+      [29.5, ['swim', 'boat'], { bobo: 'wave' }], // "I can paddle like I'm in a boat"
+      [31.5, ['climb'], { bobo: 'up' }], // "I can climb, climb to reach the top"
+      [36, ['walk', 'jump', 'swim', 'climb'], { bobo: 'clap' }], // "look at what I can do"
+      [41, ['climb'], { bobo: 'up' }],
+      [48, ['walk', 'jump', 'swim', 'climb', 'dance']],
+      [59, ['walk'], { bobo: 'sway' }],
+      [62, ['walk'], { bobo: 'nod' }],
+      [66, ['jump'], { bobo: 'jump' }],
+      [69.5, ['jump', 'dance'], { bobo: 'spin' }],
+      [76, ['swim'], { bobo: 'sway' }],
+      [78.5, ['swim', 'boat'], { bobo: 'wave' }],
+      [81.5, ['climb'], { bobo: 'up' }],
+      [85.5, ['walk', 'jump', 'swim', 'climb'], { bobo: 'clap' }],
+      [90.5, ['climb'], { bobo: 'up' }],
+      [95, ['walk', 'jump', 'swim', 'climb'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'ants',
+    title: 'Ants',
+    file: 'music/ants.mp3',
+    cover: 'ant',
+    color: '#a3e635',
+    world: 'bugs',
+    stage: 'garden',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/pop-ants-313006/' },
+    cues: [
+      [0, ['ant', 'bee', 'ladybug', 'butterfly']],
+      [4.5, ['ant'], { bobo: 'nod' }], // "can you see the tiny ants?"
+      [8, ['ant'], { bobo: 'jump' }], // "marching in their polka dot pants"
+      [11, ['ant', 'boots'], { bobo: 'sway' }], // "in teeny tiny boots"
+      [19.5, ['ant'], { bobo: 'up' }], // "ants crawling up the wall"
+      [21, ['five', 'six', 'seven', 'eight'], { bobo: 'nod' }], // "five, six, seven, eight"
+      [25, ['ant', 'spider', 'beetle']],
+      [30, ['ant'], { bobo: 'nod' }],
+      [36, ['one', 'two', 'three', 'four'], { bobo: 'clap' }], // "one, two, three, four"
+      [38.5, ['ant'], { bobo: 'run' }], // "march across the kitchen floor"
+      [41, ['five', 'six', 'seven', 'eight'], { bobo: 'clap' }],
+      [43.5, ['ant', 'rain'], { bobo: 'shake' }], // "under the garden gate... rain is falling"
+      [50, ['ant'], { bobo: 'run' }], // "now it's time to run, run, run"
+      [57.5, ['ant', 'bee', 'ladybug', 'butterfly', 'snail', 'worm'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'dinos',
+    title: "Rockin' with the Dinosaurs",
+    file: 'music/dinos.mp3',
+    cover: 'trex',
+    color: '#22c55e',
+    world: 'dinos',
+    stage: 'jungle',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-rockin-with-the-dinosaurs-354730/' },
+    cues: [
+      [0, ['dinosaur', 'trex', 'stegosaurus'], { bobo: 'shake' }], // "the ground is shaking"
+      [4.5, ['dinosaur'], { bobo: 'jump' }], // "the dinos came to party"
+      [9, ['trex'], { bobo: 'nod' }], // "a rex on lead"
+      [11.5, ['stegosaurus'], { bobo: 'clap' }], // "stegosaurus drumming"
+      [15, ['pterodactyl'], { bobo: 'up' }], // "pterodactyl's flying"
+      [19.5, ['dinosaur', 'trex', 'stegosaurus', 'pterodactyl'], { bobo: 'jump' }], // "rockin' with the dinosaurs"
+      [22, ['dinosaur', 'trex', 'stegosaurus', 'pterodactyl'], { bobo: 'spin' }], // "do the dino twist"
+      [24.5, ['footprint', 'fossil'], { bobo: 'jump' }], // "stomping on the fossil floor"
+      [29, ['dinosaur', 'trex']],
+      [39, ['trex', 'shoes'], { bobo: 'sway' }], // "T-rex strutting in his dancing shoes"
+      [47.5, ['dinosaur', 'trex', 'triceratops', 'stegosaurus', 'pterodactyl'], { bobo: 'spin' }], // "spinning like a comet"
+      [52.5, ['dinosaur'], { bobo: 'spin' }], // "twist like a top"
+      [59, ['footprint'], { bobo: 'jump' }], // "stomp three times"
+      [61.5, ['footprint'], { bobo: 'up' }], // "jump in the air"
+      [64, ['dinosaur', 'trex'], { bobo: 'shake' }], // "wiggle"
+      [71.5, ['pterodactyl'], { bobo: 'up' }], // "flying in the disco light"
+      [75, ['volcano'], { bobo: 'jump' }], // "jumping in a lava glow"
+      [79, ['trex'], { bobo: 'shake' }], // "roar with the dino show"
+      [84, ['one', 'two', 'three'], { bobo: 'clap' }], // "a one, two, three"
+      [89.5, ['dinosaur', 'trex', 'stegosaurus', 'pterodactyl'], { bobo: 'wave' }], // "good night"
+      [93, ['dinosaur', 'trex', 'triceratops', 'stegosaurus', 'pterodactyl', 'egg']],
+    ],
+  },
+  {
+    id: 'lunchbox',
+    title: 'My Lunch Box',
+    file: 'music/lunchbox.mp3',
+    cover: 'carrot',
+    color: '#4ade80',
+    world: 'veggies',
+    stage: 'kitchen',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-my-lunch-box-238699/' },
+    cues: [
+      [0, ['carrot', 'apple', 'tomato', 'corn']],
+      [3, ['carrot', 'apple', 'tomato', 'corn'], { bobo: 'up' }], // "open up this treasure box"
+      [11.5, ['apple'], { bobo: 'nod' }], // "apple slices if I'm lucky"
+      [15.5, VEG_COLORS, { bobo: 'spin' }], // "all the colours in my sight"
+      [20.5, ['carrot', 'apple'], { bobo: 'sway' }], // "lunchbox, my midday thrill"
+      [26, ['carrot'], { bobo: 'jump' }], // "with every bite"
+      [33, ['carrot', 'apple', 'tomato'], { bobo: 'clap' }], // "lunchbox joy"
+      [38.5, ['apple'], { bobo: 'nod' }], // "an apple plus a sandwich"
+      [41, ['carrot'], { bobo: 'jump' }], // "some carrot sticks and cheese"
+      [44, ['carrot', 'apple', 'tomato', 'corn']],
+      [51, ['carrot', 'apple', 'tomato', 'corn'], { bobo: 'sway' }], // "my four-leaf clover"
+      [56, ['carrot', 'tomato', 'potato', 'corn', 'cucumber', 'onion'], { bobo: 'clap' }], // "Monday through to Friday"
+      [65.5, ['apple'], { bobo: 'nod' }],
+      [69, VEG_COLORS, { bobo: 'spin' }],
+      [74, ['carrot', 'apple'], { bobo: 'sway' }],
+      [84, ['carrot', 'apple', 'tomato'], { bobo: 'clap' }],
+      [89.5, ['apple'], { bobo: 'nod' }],
+      [92.5, ['carrot'], { bobo: 'jump' }],
+      [96, ['carrot', 'apple', 'tomato', 'corn']],
+      [106, ['carrot', 'apple', 'tomato', 'corn'], { bobo: 'sway' }],
+      [120, ['apple'], { bobo: 'nod' }],
+      [122.5, ['carrot'], { bobo: 'jump' }],
+      [127, ['carrot', 'apple', 'tomato', 'corn']],
+      [138, ['carrot', 'tomato', 'potato', 'corn', 'cucumber', 'onion'], { bobo: 'clap' }],
+      [150, ['carrot', 'apple', 'tomato', 'corn'], { bobo: 'sway' }],
+      [160, ['carrot', 'tomato', 'potato', 'corn', 'cucumber', 'onion'], { bobo: 'clap' }],
+      [172, ['carrot', 'apple', 'tomato', 'corn'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'waterbaby',
+    title: "I'm a Water Baby",
+    file: 'music/waterbaby.mp3',
+    cover: 'dolphin',
+    color: '#2dd4bf',
+    world: 'sea',
+    stage: 'underwater',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-im-a-water-baby-fun-mix-315161/' },
+    cues: [
+      [0, SEA_FRIENDS, { bobo: 'sway' }], // "I'm a water baby"
+      [9, ['swim', 'dolphin'], { bobo: 'sway' }], // "watch me swim around"
+      [16, ['swim', 'fish'], { bobo: 'sway' }], // "I like to swim, it really cools me down"
+      [20, ['dolphin', 'turtle', 'whale'], { bobo: 'spin' }], // "let's get into the pool and swim around"
+      [26, SEA_FRIENDS, { bobo: 'clap' }], // "I'm a water baby"
+      [34, ['swim'], { bobo: 'sway' }],
+      [38.5, ['mom'], { bobo: 'wave' }], // "that my mother bought me"
+      [42.5, ['swim'], { bobo: 'nod' }], // "I know how to swim"
+      [51, ['swim'], { bobo: 'up' }], // "floaties, they can really help"
+      [55.5, ['dad'], { bobo: 'nod' }], // "my dad can tell"
+      [58, SEA_FRIENDS, { bobo: 'clap' }],
+      [67, ['swim', 'dolphin'], { bobo: 'sway' }], // "backstroke and freestyle"
+      [73.5, ['swim', 'boat'], { bobo: 'wave' }], // "I know how to paddle"
+      [78.5, ['mom', 'dad'], { bobo: 'jump' }], // "come on mum and dad... jump on it"
+      [88, SEA_FRIENDS],
+      [92, SEA_FRIENDS, { bobo: 'clap' }],
+      [99.5, ['swim', 'dolphin', 'whale'], { bobo: 'spin' }], // "let's swim around"
+      [104, ['whale', 'shark', 'octopus', 'crab', 'starfish', 'jellyfish', 'turtle', 'seahorse'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'happy',
+    title: 'What Makes Me Happy',
+    file: 'music/happy.mp3',
+    cover: 'happy',
+    color: '#fb7185',
+    world: 'feelings',
+    stage: 'dots',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/pop-what-makes-me-happy-296247/' },
+    cues: [
+      [0, ['happy', 'excited']],
+      [6, ['happy'], { bobo: 'jump' }], // "what makes me happy"
+      [8.5, ['happy', 'sing'], { bobo: 'sway' }], // "is when I sing a song"
+      [12, ['happy'], { bobo: 'clap' }], // "what else can make me happy"
+      [19.5, ['drum'], { bobo: 'nod' }], // "the piano or the drums"
+      [24, ['drum', 'sing'], { bobo: 'sway' }], // "the guitar, violin"
+      [29, ['drum'], { bobo: 'up' }], // "the trumpet"
+      [36, ['happy', 'excited', 'surprised']],
+      [49.5, ['happy'], { bobo: 'jump' }],
+      [52.5, ['happy', 'sing'], { bobo: 'sway' }],
+      [56.5, ['happy'], { bobo: 'clap' }],
+      [64, ['drum'], { bobo: 'nod' }],
+      [76, ['drum', 'sing'], { bobo: 'up' }],
+      [82, ['happy', 'excited', 'surprised', 'shy']],
+      [110, ['happy', 'sing'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'schoolyard',
+    title: 'Schoolyard Fun',
+    file: 'music/schoolyard.mp3',
+    cover: 'bag',
+    color: '#3b82f6',
+    world: 'school',
+    stage: 'balloons',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-schoolyard-fun-350340/' },
+    cues: [
+      [0, SCHOOL_THINGS],
+      [8, ['bag', 'book'], { bobo: 'wave' }], // "ring the bell, the day is done"
+      [11, SCHOOL_THINGS, { bobo: 'jump' }], // "time for schoolyard fun... hopscotch"
+      [16.5, SCHOOL_THINGS, { bobo: 'clap' }], // "you're gonna laugh a lot"
+      [19.5, SCHOOL_THINGS], // "come and play"
+      [24, ['dance', 'jump'], { bobo: 'jump' }], // "dancing feet, jump in the circle"
+      [28.5, ['star'], { bobo: 'up' }], // "sprinkle stars all around"
+      [33, SCHOOL_THINGS, { bobo: 'spin' }], // "lighting up this playground"
+      [40.5, ['book'], { bobo: 'nod' }], // "picture books and story time"
+      [44, ['book', 'paint'], { bobo: 'sway' }],
+      [52, SCHOOL_THINGS],
+      [57.5, ['crayon', 'paint'], { bobo: 'spin' }], // "colours bright, a classroom"
+      [66, ['balloon'], { bobo: 'up' }], // "get the balloons in the sky"
+      [69, ['balloon'], { bobo: 'wave' }], // "wave your hands"
+      [75.5, ['happy'], { bobo: 'jump' }], // "happiness gets you every time"
+      [80, ['star'], { bobo: 'clap' }], // "a shining party star"
+      [85, SCHOOL_THINGS],
+      [95, SCHOOL_THINGS, { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'shoes',
+    title: 'Groove in My Shoes',
+    file: 'music/shoes.mp3',
+    cover: 'shoes',
+    color: '#f472b6',
+    world: 'clothes',
+    stage: 'party',
+    credit: { artist: 'lilex', url: 'https://pixabay.com/music/happy-childrens-tunes-groove-in-my-shoes-425506/' },
+    cues: [
+      [0, ['hat', 'shoes', 'socks', 'shirt'], { bobo: 'sway' }],
+      [17, ['hat'], { bobo: 'nod' }], // "got my hat"
+      [19, ['hat', 'shoes'], { bobo: 'jump' }], // "my shiny shoes, dancing"
+      [25, ['shoes', 'drum'], { bobo: 'nod' }], // "every step's a tiny drum"
+      [31, ['shoes'], { bobo: 'jump' }], // "boom, bada-boom!"
+      [35, ['shoes'], { bobo: 'clap' }], // "clap your hands, don't be shy"
+      [40.5, ['shoes'], { bobo: 'spin' }], // "groove in my shoes"
+      [45, ['shoes'], { bobo: 'sway' }], // "swing left, swing right"
+      [50, ['shoes'], { bobo: 'jump' }], // "jump in the feet"
+      [53, ['shoes', 'moon'], { bobo: 'up' }], // "we're over the moon"
+      [57.5, ['shoes'], { bobo: 'spin' }],
+      [64, ['socks'], { bobo: 'sway' }], // "sunny socks, they glow so bright"
+      [68.5, ['shoes'], { bobo: 'nod' }], // "rainbow laces"
+      [75, ['hat', 'shoes', 'socks', 'shirt', 'dress', 'coat'], { bobo: 'spin' }], // "every move is a silly rhyme"
+      [83, ['shoes'], { bobo: 'jump' }], // "who's got the groove?"
+      [88, ['hat', 'shoes', 'socks', 'shirt'], { bobo: 'clap' }], // "what do we say? Hooray!"
+      [95, ['shoes'], { bobo: 'spin' }],
+      [101, ['shoes', 'sun'], { bobo: 'up' }], // "turn up the sunshine"
+      [105, ['hat', 'shoes', 'socks', 'shirt', 'dress', 'coat']],
+      [120, ['hat', 'shoes', 'socks'], { bobo: 'wave' }],
+    ],
+  },
+  {
+    id: 'googoo',
+    title: 'Do the Goo Goo Drop',
+    file: 'music/googoo.mp3',
+    cover: 'baby',
+    color: '#e879f9',
+    world: 'family',
+    stage: 'party',
+    credit: { artist: 'AiCanvas', url: 'https://pixabay.com/music/happy-childrens-tunes-do-the-goo-goo-drop-beehive-mix-children-436656/' },
+    cues: [
+      [0, ['baby', 'mom', 'dad']],
+      [5, ['baby'], { bobo: 'shake' }], // "shake your rattle and pop"
+      [12.5, ['baby'], { bobo: 'jump' }],
+      [18, ['baby', 'sister', 'brother'], { bobo: 'shake' }], // "every baby's got a rattle to shake"
+      [21, ['blocks'], { bobo: 'clap' }], // "clack the blocks"
+      [24, ['baby', 'family'], { bobo: 'jump' }], // "shout yeah, yeah"
+      [29.5, ['cup'], { bobo: 'nod' }], // "sip the cup"
+      [33, ['baby'], { bobo: 'spin' }], // "milk splash, baby rock"
+      [40, ['baby', 'mom', 'dad'], { bobo: 'up' }], // "can you do the goo goo drop?"
+      [45, ['baby'], { bobo: 'sway' }], // "wiggle around"
+      [47.5, ['letter-a', 'letter-b', 'letter-c'], { bobo: 'jump' }], // "dance on the letters"
+      [49.5, ['balloon'], { bobo: 'up' }], // "watch 'em go higher"
+      [53, ['baby'], { bobo: 'no' }], // "you don't need your pacifier"
+      [58, ['shoes'], { bobo: 'spin' }], // "twist to the shoe-shoe"
+      [62.5, ['family', 'baby', 'grandma', 'grandpa']],
+      [70, ['family'], { bobo: 'wave' }],
     ],
   },
 ]
