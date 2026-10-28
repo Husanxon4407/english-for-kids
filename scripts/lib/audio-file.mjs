@@ -12,13 +12,13 @@ export function trimSilence(samples, rate) {
   return samples.subarray(Math.max(0, start - before), Math.min(samples.length, end + after))
 }
 
-export function toMp3(samples, rate) {
+export function toMp3(samples, rate, kbps = 64) {
   const pcm = new Int16Array(samples.length)
   for (let i = 0; i < samples.length; i++) {
     const s = Math.max(-1, Math.min(1, samples[i]))
     pcm[i] = s < 0 ? s * 0x8000 : s * 0x7fff
   }
-  const encoder = new Mp3Encoder(1, rate, 64)
+  const encoder = new Mp3Encoder(1, rate, kbps)
   const chunks = []
   for (let i = 0; i < pcm.length; i += 1152) {
     const out = encoder.encodeBuffer(pcm.subarray(i, i + 1152))

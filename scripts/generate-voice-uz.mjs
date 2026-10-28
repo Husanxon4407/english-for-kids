@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { UZ_LINES, UZ_WORDS } from '../src/data/uzbek.js'
 import { stories } from '../src/data/stories.js'
+import { azureSsmlToMp3 } from './lib/azure.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUT_DIR = path.join(root, 'public', 'audio', 'uz')
@@ -71,44 +72,19 @@ function fileNameFor(text) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 40)
-  const hash = createHash('sha1').update(`${VOICE}|${RATE}|${PITCH}|${text}`).digest('hex').slice(0, 8)
+  const hash = createHash('sha1').update(`${VOICE}|${RATE}|${PITCH}|trimmed|${text}`).digest('hex').slice(0, 8)
   return `${slug || 'line'}-${hash}.mp3`
 }
 
 const escapeXml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-async function synthesize(...args) {
-  // The free tier answers 429 when asked too quickly: wait and try again.
-  for (let attempt = 1; ; attempt++) {
-    try {
-      return await synthesizeOnce(...args)
-    } catch (error) {
-      if (!error.retry || attempt >= 8) throw error
-      await new Promise((resolve) => setTimeout(resolve, 2000 * attempt))
-    }
-  }
-}
-
-async function synthesizeOnce(text, { key, region }) {
+// Recorded with the silence around the words trimmed (see lib/azure.mjs), so
+// the Uzbek meaning follows the English word without a pause.
+function synthesize(text, { key, region }) {
   // The service expects the modern apostrophe-like letter in o‘ and g‘.
   const spoken = text.replace(/([og])'/gi, '$1‘')
   const ssml = `<speak version="1.0" xml:lang="uz-UZ"><voice name="${VOICE}"><prosody rate="${RATE}" pitch="${PITCH}">${escapeXml(spoken)}</prosody></voice></speak>`
-  const response = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
-    method: 'POST',
-    headers: {
-      'Ocp-Apim-Subscription-Key': key,
-      'Content-Type': 'application/ssml+xml',
-      'X-Microsoft-OutputFormat': 'audio-24khz-96kbitrate-mono-mp3',
-      'User-Agent': 'wordland-voice',
-    },
-    body: ssml,
-  })
-  if (!response.ok) {
-    if (response.status === 429) throw Object.assign(new Error('Azure Speech answered 429 Too Many Requests'), { retry: true })
-    const hint = response.status === 401 ? ' (check AZURE_SPEECH_KEY and AZURE_SPEECH_REGION)' : ''
-    throw new Error(`Azure Speech answered ${response.status} ${response.statusText}${hint}`)
-  }
-  return Buffer.from(await response.arrayBuffer())
+  return azureSsmlToMp3(ssml, { key, region })
 }
 
 const manifest = { voice: VOICE, rate: RATE, pitch: PITCH, lines: {} }

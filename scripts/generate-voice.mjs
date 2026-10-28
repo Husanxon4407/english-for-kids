@@ -101,7 +101,7 @@ function fileNameFor(text) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 40)
-  const how = KOKORO ? (acted.has(text) ? recipe(acted.get(text)) : SPEED) : `${RATE}|${PITCH}`
+  const how = KOKORO ? (acted.has(text) ? recipe(acted.get(text)) : SPEED) : `${RATE}|${PITCH}|trimmed`
   const hash = createHash('sha1').update(`${VOICE}|${how}|${voiceKey(text)}`).digest('hex').slice(0, 8)
   return `${slug || 'line'}-${hash}.mp3`
 }
