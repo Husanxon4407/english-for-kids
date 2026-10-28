@@ -5,9 +5,9 @@
 const TRACKS = {
   // Under the told stories: gentle and dreamy. It belongs to the story, so the
   // music switch (which is for the background music) leaves it playing.
-  story: { file: 'music/bgm-story.mp3', level: 0.14, always: true },
+  story: { file: 'music/bgm-story.mp3', level: 0.08, always: true },
   // On the map and in the games: light and playful.
-  play: { file: 'music/bgm-play.mp3', level: 0.1 },
+  play: { file: 'music/bgm-play.mp3', level: 0.06 },
 }
 
 export const MUSIC_CREDITS = [
