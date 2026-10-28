@@ -50,7 +50,9 @@ export default function StoryPlayer({ story, onBack, onHome }) {
     let cancelled = false
     const started = Date.now()
     const lines = [...(index === 0 ? [SCRIPT.title(story), ...uz.text(story.uz)] : []), beat.line, ...uz.text(beat.uz)]
-    const sound = beat.sfx && setTimeout(() => sfx[beat.sfx]?.(), beat.sfxAt || SFX_AT)
+    // `sfx` is one sound name (played at `sfxAt`), or a list of [name, milliseconds].
+    const sounds = typeof beat.sfx === 'string' ? [[beat.sfx, beat.sfxAt || SFX_AT]] : beat.sfx || []
+    const timers = sounds.map(([name, at]) => setTimeout(() => sfx[name]?.(), at))
 
     speak(lines).then(async () => {
       await wait(Math.max(PAUSE, readingTime(beat.line) - (Date.now() - started)))
@@ -65,7 +67,7 @@ export default function StoryPlayer({ story, onBack, onHome }) {
     })
     return () => {
       cancelled = true
-      clearTimeout(sound)
+      timers.forEach(clearTimeout)
     }
   }, [index, round, paused, done])
 
@@ -86,13 +88,13 @@ export default function StoryPlayer({ story, onBack, onHome }) {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <TopBar onBack={onBack} onHome={onHome}>
+      <TopBar onBack={onBack} onHome={onHome} music={false}>
         <StarCounter />
       </TopBar>
 
       <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-4 px-3 pb-5 sm:gap-5 sm:px-6 short:flex-row short:pb-3">
         <div className="relative aspect-[4/3] w-full max-w-[min(56rem,calc((var(--room)-9.5rem)*4/3))] overflow-hidden rounded-[2rem] border-8 border-white bg-white shadow-xl short:max-w-[calc((var(--room)-1.5rem)*4/3)] short:border-4">
-          <StoryStage key={round} scene={sceneAt(beats, index)} actors={beat.actors} fx={beat.fx} talking={speaking} />
+          <StoryStage key={round} scene={sceneAt(beats, index)} actors={beat.actors} fx={beat.fx} camera={beat.camera} talking={speaking} />
           {/* How far the story has got. */}
           <div className="absolute inset-x-0 bottom-0 z-[300] h-2 bg-white/50" aria-hidden="true">
             <div

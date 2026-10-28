@@ -10,6 +10,7 @@ import { skyArt } from './art/sky.jsx'
 import { letterArt } from './art/letters.jsx'
 import { alphabetArt } from './art/alphabet.jsx'
 import { moreArt } from './art/more.jsx'
+import { propArt } from './art/props.jsx'
 
 const ART = {
   ...animalArt,
@@ -24,6 +25,7 @@ const ART = {
   ...letterArt,
   ...alphabetArt,
   ...moreArt,
+  ...propArt,
 }
 
 /**

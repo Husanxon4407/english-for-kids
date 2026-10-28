@@ -5,6 +5,7 @@
 //   npm run voice:uz -- --force      re-record everything
 //   npm run voice:uz -- --voice=uz-UZ-SardorNeural   the male voice
 //   npm run voice:uz -- --list       just print the lines
+//   npm run voice:uz -- --rate=+5% --pitch=+12%   speed and pitch
 //
 // It needs a Speech key. Put these two lines in a file called `.env.local`
 // in the project folder (the file is ignored by git, so the key stays private):
@@ -32,7 +33,10 @@ const args = Object.fromEntries(
   }),
 )
 const VOICE = args.voice || 'uz-UZ-MadinaNeural' // warm female voice
-const RATE = args.rate || '-12%' // a little slower than adult speech
+// Normal speed and a little higher than her natural voice: brighter and livelier
+// for children (the slower, lower first recording sounded dull).
+const RATE = args.rate || '+5%'
+const PITCH = args.pitch || '+12%'
 const FORCE = Boolean(args.force)
 
 // Keys come from the environment or from .env.local — never from the code.
@@ -67,7 +71,7 @@ function fileNameFor(text) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 40)
-  const hash = createHash('sha1').update(`${VOICE}|${RATE}|${text}`).digest('hex').slice(0, 8)
+  const hash = createHash('sha1').update(`${VOICE}|${RATE}|${PITCH}|${text}`).digest('hex').slice(0, 8)
   return `${slug || 'line'}-${hash}.mp3`
 }
 
@@ -88,7 +92,7 @@ async function synthesize(...args) {
 async function synthesizeOnce(text, { key, region }) {
   // The service expects the modern apostrophe-like letter in o‘ and g‘.
   const spoken = text.replace(/([og])'/gi, '$1‘')
-  const ssml = `<speak version="1.0" xml:lang="uz-UZ"><voice name="${VOICE}"><prosody rate="${RATE}">${escapeXml(spoken)}</prosody></voice></speak>`
+  const ssml = `<speak version="1.0" xml:lang="uz-UZ"><voice name="${VOICE}"><prosody rate="${RATE}" pitch="${PITCH}">${escapeXml(spoken)}</prosody></voice></speak>`
   const response = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
     method: 'POST',
     headers: {
@@ -107,7 +111,7 @@ async function synthesizeOnce(text, { key, region }) {
   return Buffer.from(await response.arrayBuffer())
 }
 
-const manifest = { voice: VOICE, rate: RATE, lines: {} }
+const manifest = { voice: VOICE, rate: RATE, pitch: PITCH, lines: {} }
 const todo = []
 for (const text of lines) {
   const file = `audio/uz/${fileNameFor(text)}`

@@ -4,6 +4,7 @@ import { Bobo } from '../components/Mascot.jsx'
 import ItemArt from '../components/ItemArt.jsx'
 import StarCounter from '../components/StarCounter.jsx'
 import SongStage from '../components/SongStage.jsx'
+import { Parade, boboAction, cardMove } from '../components/SongMotion.jsx'
 import GameComplete from '../components/GameComplete.jsx'
 import RoundButton from '../components/RoundButton.jsx'
 import { NoteIcon, PauseIcon, PlayIcon, StarIcon } from '../components/Icons.jsx'
@@ -14,14 +15,15 @@ import { songItem } from '../data/songs.js'
 
 const SONG_STARS = 2
 
-// The pictures on screen at `time`: the last cue that has started.
-function picturesAt(cues, time) {
+// The cue at `time`: the last one that has started. A cue is
+// [seconds, picture ids, { bobo }], where `bobo` is what Bobo does then.
+function cueAt(cues, time) {
   let current = cues[0]
   for (const cue of cues) {
     if (cue[0] <= time) current = cue
     else break
   }
-  return current[1]
+  return current
 }
 
 // A ring of little stars that flies out from a picture when it is tapped.
@@ -118,21 +120,22 @@ export default function SongPlayer({ song, onBack, onHome }) {
 
   if (done) return <GameComplete stars={SONG_STARS} onAgain={again} onBack={onBack} />
 
-  const ids = picturesAt(song.cues, time)
+  const [, ids, { bobo } = {}] = cueAt(song.cues, time)
+  const action = boboAction(bobo)
   const many = ids.length > 3
   // One picture: show its word too. So does a letter with its picture ("A is for apple").
   const label = ids.length === 1 || (ids.length === 2 && ids[0].startsWith('letter-')) ? songItem(ids[ids.length - 1]).word : null
-  const dance = playing ? { animation: 'wl-dance 0.9s ease-in-out infinite' } : undefined
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <TopBar onBack={onBack} onHome={onHome}>
+      <TopBar onBack={onBack} onHome={onHome} music={false}>
         <StarCounter />
       </TopBar>
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-4 px-4 pb-6 sm:gap-5 low:gap-3 low:pb-3 short:gap-3 short:pb-3">
         <div className="stage-motion relative flex min-h-[15rem] w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-[2.5rem] border-8 border-white px-3 pb-4 pt-9 shadow-xl sm:min-h-[21rem] sm:flex-row sm:gap-6 sm:px-6 sm:pt-10 low:min-h-[13rem] low:pt-7 short:min-h-0 short:flex-1 short:flex-row short:gap-4 short:border-4 short:py-2">
           <SongStage name={song.stage} className="absolute inset-0 h-full w-full" />
+          <Parade key={ids.join('-')} ids={ids} playing={playing} />
           {[6, 28, 70, 90].map((left, i) => (
             <span
               key={left}
@@ -147,8 +150,8 @@ export default function SongPlayer({ song, onBack, onHome }) {
             </span>
           ))}
 
-          <div className="relative w-24 shrink-0 sm:w-40 low:w-16 short:w-20" style={dance}>
-            <Bobo talking={playing} waving className="h-auto w-full drop-shadow-lg" />
+          <div key={bobo} className="relative w-24 shrink-0 sm:w-40 low:w-16 short:w-20" style={playing ? { animation: action.animation } : undefined}>
+            <Bobo talking={playing} waving={action.waving} arms={action.arms} className="h-auto w-full drop-shadow-lg" />
           </div>
 
           {/* The pictures for the words being sung right now: they fly in, then dance. */}
@@ -176,7 +179,7 @@ export default function SongPlayer({ song, onBack, onHome }) {
                       className={`aspect-square rounded-2xl p-1 ${tapped?.id === id ? 'animate-wiggle' : ''}`}
                       style={{ backgroundColor: item.color }}
                     >
-                      <ItemArt id={id} className="h-full w-full" style={dance && { ...dance, animationDelay: `${i * 0.12}s` }} />
+                      <ItemArt id={id} className="h-full w-full" style={playing ? { animation: cardMove(id, i * 0.12) } : undefined} />
                     </div>
                   </button>
                 )

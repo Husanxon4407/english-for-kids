@@ -3,8 +3,9 @@
 // clear. The tunes are instrumentals from Pixabay Music (Pixabay Content
 // License): see MUSIC_CREDITS.
 const TRACKS = {
-  // Under the told stories: gentle and dreamy.
-  story: { file: 'music/bgm-story.mp3', level: 0.14 },
+  // Under the told stories: gentle and dreamy. It belongs to the story, so the
+  // music switch (which is for the background music) leaves it playing.
+  story: { file: 'music/bgm-story.mp3', level: 0.14, always: true },
   // On the map and in the games: light and playful.
   play: { file: 'music/bgm-play.mp3', level: 0.1 },
 }
@@ -15,22 +16,26 @@ export const MUSIC_CREDITS = [
 ]
 
 // While Bobo speaks the music plays at this share of its level.
-const DUCK = 0.4
+const DUCK = 0.25
 // Wait a moment after a line before coming back up, so the music does not
 // pump up and down between the lines of one sentence.
 const UNDUCK_AFTER = 700
 const STEP_MS = 50
 const FADE_STEPS = 16
 
-let enabled = true
+let soundOn = true // all sound (the grown-ups' switch)
+let musicOn = true // the background music switch
 let wanted = null // name of the tune that should be playing
 let playing = null // { name, audio }
 let speaking = false
 let unduck = null
 let fader = null
 
+// Whether a tune may play with the switches as they are.
+const allowed = (name) => soundOn && (musicOn || TRACKS[name].always)
+
 function targetVolume() {
-  if (!enabled || !playing || playing.name !== wanted) return 0
+  if (!playing || playing.name !== wanted || !allowed(playing.name)) return 0
   return TRACKS[playing.name].level * (speaking ? DUCK : 1)
 }
 
@@ -62,7 +67,7 @@ function fade() {
 }
 
 function start() {
-  if (playing || !enabled || !wanted || typeof Audio === 'undefined') return
+  if (playing || !wanted || !allowed(wanted) || typeof Audio === 'undefined') return
   const audio = new Audio(import.meta.env.BASE_URL + TRACKS[wanted].file)
   audio.loop = true
   audio.volume = 0
@@ -81,9 +86,10 @@ export function playMusic(name) {
   else start()
 }
 
-/** The grown-ups' music switch (also off whenever all sound is off). */
-export function setMusicEnabled(value) {
-  enabled = value
+/** The sound switch and the background music switch. */
+export function setMusicEnabled(sound, music) {
+  soundOn = sound
+  musicOn = music
   if (playing) fade()
   else start()
 }

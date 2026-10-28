@@ -7,28 +7,19 @@ import StarCounter from '../components/StarCounter.jsx'
 import { SCRIPT } from '../data/script.js'
 import ItemArt from '../components/ItemArt.jsx'
 import { useProgress } from '../lib/progress.jsx'
-import { UZBEK_AVAILABLE, useUzbek } from '../lib/uzbek.js'
-import { say } from '../lib/audio.js'
-import { UZ_LINES } from '../data/uzbek.js'
-import uzManifest from '../data/voice-manifest-uz.json'
+import { useUzbek } from '../lib/uzbek.js'
 import { Hand } from '../components/ActivityPicture.jsx'
+import QuickSwitches from '../components/QuickSwitches.jsx'
 
 export default function Home({ onPlay, onGrownUps }) {
   const { speaking, speak } = useSpeaker()
-  const { profiles, activeProfile, setSetting } = useProgress()
+  const { profiles, activeProfile } = useProgress()
   const uz = useUzbek()
   const [greeted, setGreeted] = useState(false)
 
   function greet() {
     setGreeted(true)
     speak([...SCRIPT.homeGreeting, ...uz.line('home')])
-  }
-
-  // Turning the helper on answers in Uzbek straight away, so it is obvious what the switch does.
-  function toggleUzbek() {
-    setSetting('helper', uz.on ? 'off' : 'uz')
-    const file = uzManifest.lines?.[UZ_LINES.home]
-    if (!uz.on && file) say('', { src: import.meta.env.BASE_URL + file })
   }
 
   async function play() {
@@ -38,6 +29,9 @@ export default function Home({ onPlay, onGrownUps }) {
 
   return (
     <main className="relative flex min-h-dvh flex-col items-center justify-center gap-6 px-4 py-8 sm:gap-10 low:gap-4 low:py-4 short:flex-row short:gap-8">
+      <div className="absolute left-4 top-4 flex items-center gap-2 sm:left-6 sm:top-6 sm:gap-3">
+        <QuickSwitches />
+      </div>
       <div className="absolute right-4 top-4 flex items-center gap-3 sm:right-6 sm:top-6">
         {/* Whose turn it is — their own picture, so no reading is needed. */}
         {profiles.length > 1 && (
@@ -70,20 +64,6 @@ export default function Home({ onPlay, onGrownUps }) {
         <Hand className="pointer-events-none absolute -bottom-4 -right-6 w-14 drop-shadow-lg sm:w-16" style={{ animation: 'wl-tap 1.1s ease-in-out infinite' }} />
       </div>
 
-      {UZBEK_AVAILABLE && (
-      <button
-        type="button"
-        onClick={toggleUzbek}
-        aria-pressed={uz.on}
-        aria-label="O‘zbekcha yordam"
-        className={`absolute bottom-4 left-4 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold shadow-sm transition-colors sm:bottom-6 sm:left-6 ${
-          uz.on ? 'bg-sky-500 text-white' : 'bg-white/70 text-slate-500'
-        }`}
-      >
-        <span className={`h-3 w-3 rounded-full ${uz.on ? 'bg-lime-300' : 'bg-slate-300'}`} />
-        O‘zbekcha
-      </button>
-      )}
 
       {/* Small and quiet on purpose: this is for adults, and it's protected by a reading check. */}
       <button

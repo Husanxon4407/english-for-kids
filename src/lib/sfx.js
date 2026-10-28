@@ -57,3 +57,10 @@ export const boing = () => play([[300, 0, 0.12, 0.1, 'triangle'], [600, 0.09, 0.
 
 /** Knock, knock. */
 export const knock = () => play([[140, 0, 0.1, 0.2, 'triangle'], [140, 0.25, 0.1, 0.2, 'triangle']])
+
+/** A little bird: two quick high chirps. */
+export const tweet = () =>
+  play([[2200, 0, 0.06, 0.06], [2700, 0.05, 0.07, 0.06], [2300, 0.22, 0.06, 0.06], [2900, 0.27, 0.08, 0.06]])
+
+/** Something flies or runs past fast. */
+export const whoosh = () => play([[700, 0, 0.12, 0.05, 'sawtooth'], [500, 0.06, 0.14, 0.05, 'sawtooth'], [340, 0.14, 0.18, 0.04, 'sawtooth']])

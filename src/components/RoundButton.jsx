@@ -10,7 +10,7 @@ const COLORS = {
 }
 
 const SIZES = {
-  sm: 'h-14 w-14 sm:h-16 sm:w-16 short:h-12 short:w-12',
+  sm: 'h-14 w-14 phone:h-12 phone:w-12 tiny:h-11 tiny:w-11 sm:h-16 sm:w-16 short:h-12 short:w-12',
   md: 'h-20 w-20 sm:h-24 sm:w-24 short:h-16 short:w-16',
   lg: 'h-28 w-28 sm:h-36 sm:w-36 short:h-20 short:w-20',
 }

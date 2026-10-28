@@ -108,6 +108,7 @@ export const UZ_WORDS = {
 /** Explanations of screens and activities. */
 export const UZ_LINES = {
   home: "Salom! Men Boboman. Keling, ingliz tilini birga o'rganamiz! Yashil tugmani bos!",
+  helperOn: "O'zbekcha yordam yoqildi!",
   map: 'Qayerga boramiz?',
   listen: "Tingla va to'g'ri rasmni bos!",
   matchShadow: "Har bir rasmni o'z soyasiga qo'y!",

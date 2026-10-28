@@ -1,21 +1,23 @@
-// Records every line Bobo says with a natural neural voice (Kokoro, Apache-2.0,
-// runs locally — nothing is sent to an online service).
+// Records every line Bobo says. Bobo speaks with Ana, Microsoft's child voice,
+// through the Azure Speech service (key in .env.local, see lib/azure.mjs): clear
+// and crisp, and a child's voice suits a little mascot. The older local voice
+// (Kokoro, runs offline) sounded muffled and is kept only as an option.
 //
 //   npm run voice                 record new or changed lines
 //   npm run voice -- --force      re-record everything
-//   npm run voice -- --voice=af_bella --speed=0.9
+//   npm run voice -- --voice=en-US-AnaNeural --rate=0% --pitch=0%
+//   npm run voice -- --engine=kokoro --voice=af_heart --speed=0.9
 //   npm run voice -- --list        just print the lines
 //
 // Output: public/audio/voice/*.mp3 and src/data/voice-manifest.json.
-// The first run downloads the voice model (~90 MB) and caches it.
 
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
-import { KokoroTTS } from 'kokoro-js'
 import { toMp3, trimSilence } from './lib/audio-file.mjs'
 import { act, recipe } from './lib/acting.mjs'
+import { azureSpeak, readAzureKey } from './lib/azure.mjs'
 import { worlds } from '../src/data/worlds.js'
 import { PRAISE, SCRIPT, voiceKey } from '../src/data/script.js'
 import { stories } from '../src/data/stories.js'
@@ -40,8 +42,12 @@ const args = Object.fromEntries(
     return [k, v ?? true]
   }),
 )
-const VOICE = args.voice || 'af_heart' // warm, friendly American English
-const SPEED = Number(args.speed || 0.9) // a little slower than adult speech
+const ENGINE = args.engine || 'azure'
+const KOKORO = ENGINE === 'kokoro'
+const VOICE = args.voice || (KOKORO ? 'af_heart' : 'en-US-AnaNeural')
+const SPEED = Number(args.speed || 0.9) // Kokoro only: a little slower than adult speech
+const RATE = args.rate || '0%' // Azure only
+const PITCH = args.pitch || '0%'
 const FORCE = Boolean(args.force)
 
 // ---------------------------------------------------------------------------
@@ -95,7 +101,7 @@ function fileNameFor(text) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 40)
-  const how = acted.has(text) ? recipe(acted.get(text)) : SPEED
+  const how = KOKORO ? (acted.has(text) ? recipe(acted.get(text)) : SPEED) : `${RATE}|${PITCH}`
   const hash = createHash('sha1').update(`${VOICE}|${how}|${voiceKey(text)}`).digest('hex').slice(0, 8)
   return `${slug || 'line'}-${hash}.mp3`
 }
@@ -109,7 +115,7 @@ if (args.list) {
 }
 fs.mkdirSync(OUT_DIR, { recursive: true })
 
-const manifest = { voice: VOICE, speed: SPEED, lines: {} }
+const manifest = KOKORO ? { voice: VOICE, speed: SPEED, lines: {} } : { voice: VOICE, rate: RATE, pitch: PITCH, lines: {} }
 const todo = []
 for (const text of lines) {
   if (hasStoryVoice(text)) {
@@ -121,10 +127,20 @@ for (const text of lines) {
   if (FORCE || !fs.existsSync(path.join(root, 'public', file))) todo.push({ text, file })
 }
 
-console.log(`${lines.length} lines, ${todo.length} to record with voice "${VOICE}" at speed ${SPEED}.`)
+console.log(`${lines.length} lines, ${todo.length} to record with voice "${VOICE}".`)
 
-if (todo.length) {
+if (todo.length && !KOKORO) {
+  const azure = readAzureKey(root)
+  let done = 0
+  for (const { text, file } of todo) {
+    fs.writeFileSync(path.join(root, 'public', file), await azureSpeak(text, { voice: VOICE, rate: RATE, pitch: PITCH, ...azure }))
+    done++
+    console.log(`[${done}/${todo.length}] ${text}`)
+    await new Promise((resolve) => setTimeout(resolve, 150)) // stay inside the free tier's rate limit
+  }
+} else if (todo.length) {
   console.log('Loading voice model (first run downloads it)...')
+  const { KokoroTTS } = await import('kokoro-js')
   const tts = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', { dtype: 'q8', device: 'cpu' })
   let done = 0
   let rate = 24000

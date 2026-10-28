@@ -19,6 +19,24 @@
   }
 }
 
+/* `phone`: an upright phone, where the top bar has to squeeze in; `tiny`: the
+   narrowest phones (320px). */
+@custom-variant phone {
+  @media (max-width: 419px) {
+    :root & {
+      @slot;
+    }
+  }
+}
+
+@custom-variant tiny {
+  @media (max-width: 359px) {
+    :root:root & {
+      @slot;
+    }
+  }
+}
+
 @custom-variant short {
   @media (max-height: 500px) and (orientation: landscape) {
     :root:root & {
@@ -206,6 +224,170 @@ button:focus-visible {
   0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
   20% { opacity: 1; }
   100% { transform: translate(60%, -180%) scale(1.2); opacity: 0; }
+}
+
+/* Story actors: what they do on the stage */
+@keyframes wl-walk {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-9%) rotate(-5deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(-9%) rotate(5deg); }
+}
+
+@keyframes wl-run {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-16%) rotate(-3deg); }
+}
+
+@keyframes wl-joy {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  15% { transform: translateY(0) scale(1.12, 0.86); }
+  45% { transform: translateY(-60%) scale(0.92, 1.1) rotate(-6deg); }
+  70% { transform: translateY(0) scale(1.08, 0.92); }
+  85% { transform: translateY(0) scale(1, 1); }
+}
+
+@keyframes wl-spin-around {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes wl-shiver {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3%) rotate(-2deg); }
+  75% { transform: translateX(3%) rotate(2deg); }
+}
+
+@keyframes wl-nod {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(9deg) translateY(4%); }
+  60% { transform: rotate(-2deg); }
+}
+
+@keyframes wl-no {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-12deg); }
+  40% { transform: rotate(12deg); }
+  60% { transform: rotate(-12deg); }
+  80% { transform: rotate(12deg); }
+}
+
+@keyframes wl-peek {
+  0%, 20%, 100% { transform: translateY(45%); }
+  45%, 80% { transform: translateY(-8%); }
+}
+
+@keyframes wl-chew {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.06, 0.94); }
+}
+
+@keyframes wl-knock {
+  0%, 30%, 60%, 100% { transform: translateX(0) rotate(0deg); }
+  10%, 40% { transform: translateX(-4%) rotate(-3deg); }
+  20%, 50% { transform: translateX(4%) rotate(3deg); }
+}
+
+@keyframes wl-flap {
+  0%, 100% { transform: translateY(0) rotate(-6deg) scaleY(1); }
+  50% { transform: translateY(-12%) rotate(6deg) scaleY(0.9); }
+}
+
+@keyframes wl-yawn {
+  0%, 100% { transform: rotate(-3deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.04, 0.96); }
+}
+
+@keyframes wl-glow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgb(253 224 71 / 0)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 18px rgb(253 224 71 / 0.95)); transform: scale(1.08); }
+}
+
+@keyframes wl-grow-in {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes wl-rise-in {
+  from { transform: translateY(260%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes wl-fall-in {
+  0% { transform: translateY(-700%); }
+  60% { transform: translateY(0) scale(1.12, 0.85); }
+  78% { transform: translateY(-22%) scale(0.95, 1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Bobo's arms meeting in front of his tummy: a clap. */
+@keyframes wl-clap-l {
+  0%, 100% { transform: translateX(-12px); }
+  50% { transform: translateX(3px); }
+}
+
+@keyframes wl-clap-r {
+  0%, 100% { transform: translateX(12px); }
+  50% { transform: translateX(-3px); }
+}
+
+/* Things that cross the song stage behind the pictures. */
+@keyframes wl-cross {
+  from { left: -16%; }
+  to { left: 106%; }
+}
+
+@keyframes wl-fall {
+  from { top: -18%; }
+  to { top: 104%; }
+}
+
+@keyframes wl-float-up {
+  from { top: 104%; }
+  to { top: -18%; }
+}
+
+@keyframes wl-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(0.96); }
+  45% { transform: scale(1.1); }
+}
+
+@keyframes wl-drive {
+  0%, 100% { transform: translateX(-6%) translateY(0); }
+  25% { transform: translateX(0) translateY(-3%); }
+  50% { transform: translateX(6%) translateY(0); }
+  75% { transform: translateX(0) translateY(-3%); }
+}
+
+/* Food that is eaten: a few bites, then nothing is left. */
+@keyframes wl-chomp {
+  0% { transform: scale(1) rotate(0deg); clip-path: inset(0 0 0 0); opacity: 1; }
+  25% { transform: scale(0.92) rotate(-8deg); clip-path: inset(0 22% 0 0 round 30%); }
+  50% { transform: scale(0.84) rotate(6deg); clip-path: inset(0 45% 0 0 round 30%); }
+  75% { transform: scale(0.7) rotate(-6deg); clip-path: inset(0 70% 0 0 round 30%); opacity: 1; }
+  100% { transform: scale(0.2); clip-path: inset(0 100% 0 0); opacity: 0; }
+}
+
+@keyframes wl-crumb {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.4); opacity: 0; }
+}
+
+/* A little thought bubble over an actor's head. */
+@keyframes wl-feel {
+  0% { transform: translate(-50%, 30%) scale(0); opacity: 0; }
+  60% { transform: translate(-50%, -6%) scale(1.15); opacity: 1; }
+  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+
+@keyframes wl-feel-float {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-12%) rotate(4deg); }
 }
 
 /* Activity cards, hints and balloons */

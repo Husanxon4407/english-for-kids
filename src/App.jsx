@@ -57,7 +57,7 @@ export default function App() {
   // Soft music: a gentle tune under the stories, a playful one on the map and
   // in the games, and none during songs or in the grown-ups' pages.
   useEffect(() => {
-    setMusicEnabled(settings.sound && settings.music)
+    setMusicEnabled(settings.sound, settings.music)
   }, [settings.sound, settings.music])
   useEffect(() => {
     const quiet = ['song', 'gate', 'parent'].includes(nav.screen)
