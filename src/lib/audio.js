@@ -4,7 +4,7 @@
 // silent.
 import manifest from '../data/voice-manifest.json'
 import { voiceKey } from '../data/script.js'
-import { setSpeaking } from './bgm.js'
+import { setFetchingVoice, setSpeaking } from './bgm.js'
 
 const PREFERRED_VOICES = [
   'Google US English',
@@ -24,31 +24,46 @@ const NORMAL_RATE = 0.8
 const clipCache = new Map()
 
 // Clips fetched ahead of time (see `preload`), kept in memory as blob URLs so
-// the first line in a world plays at once even on a slow connection.
+// the first line in a world plays at once even on a slow connection. Only a
+// couple download at a time, newest screen first: on a slow connection a
+// line the child asks for must not queue behind dozens of others.
+const MAX_PARALLEL = 2
 const fetched = new Map() // src -> blob URL once it has arrived
-const fetching = new Set()
+const inflight = new Map() // src -> promise, settled when the download ends
+let queue = [] // srcs waiting their turn, most wanted first
 
-function fetchAhead(src) {
-  if (!src || fetched.has(src) || fetching.has(src) || clipCache.has(src)) return
-  fetching.add(src)
-  fetch(src)
-    .then((response) => (response.ok ? response.blob() : null))
-    .then((blob) => {
-      if (blob) fetched.set(src, URL.createObjectURL(blob))
-    })
-    .catch(() => {}) // no matter: the clip simply downloads when it is played
-    .finally(() => fetching.delete(src))
+function pump() {
+  while (inflight.size < MAX_PARALLEL && queue.length) {
+    const src = queue.shift()
+    if (fetched.has(src) || inflight.has(src) || clipCache.has(src)) continue
+    const done = fetch(src)
+      .then((response) => (response.ok ? response.blob() : null))
+      .then((blob) => {
+        if (blob) fetched.set(src, URL.createObjectURL(blob))
+      })
+      .catch(() => {}) // no matter: the clip simply downloads when it is played
+      .finally(() => {
+        inflight.delete(src)
+        pump()
+      })
+    inflight.set(src, done)
+  }
+  setFetchingVoice(inflight.size > 0)
 }
 
 /**
  * Download the recordings of these lines in the background, so they are ready
  * before they are needed. Lines can also be { src } clips (the Uzbek helper).
+ * A new call goes ahead of what earlier screens asked for.
  */
 export function preload(lines) {
-  for (const line of lines) {
-    if (!line) continue
-    fetchAhead(typeof line === 'string' ? clipFor(line) : line.src)
-  }
+  const srcs = lines
+    .filter(Boolean)
+    .map((line) => (typeof line === 'string' ? clipFor(line) : line.src))
+    .filter((src) => src && !fetched.has(src) && !inflight.has(src) && !clipCache.has(src))
+  const wanted = new Set(srcs)
+  queue = [...wanted, ...queue.filter((src) => !wanted.has(src))]
+  pump()
 }
 
 function clipFor(text) {
@@ -159,6 +174,12 @@ function speakWithSynthesis(text, { rate = defaultRate, pitch = 1.1 } = {}) {
  * line). Rejects only if the recording can't be loaded at all.
  */
 function playClip(src) {
+  // Already on its way: wait for it rather than downloading it twice.
+  const arriving = !clipCache.has(src) && inflight.get(src)
+  if (arriving) {
+    const halts = haltCount
+    return arriving.then(() => (haltCount === halts ? playClip(src) : 'stopped'))
+  }
   return new Promise((resolve, reject) => {
     let audio = clipCache.get(src)
     if (!audio) {

@@ -31,6 +31,41 @@ let speaking = false
 let unduck = null
 let fader = null
 
+// When the site first opens, the music waits until Bobo's first lines have
+// downloaded and he has finished speaking: on a slow connection the (much
+// bigger) music file would otherwise hold up his voice. Never longer than
+// MAX_HOLD, and only once.
+const MAX_HOLD = 10000
+// The voice must stay quiet this long before the music comes in, so the next
+// screen's clips (fetched right after a line ends) get their turn too.
+const SETTLE_MS = 1500
+let held = true
+let holdTimer = null
+let settleTimer = null
+let fetchingVoice = false
+
+function releaseMusic() {
+  if (!held) return
+  held = false
+  clearTimeout(holdTimer)
+  clearTimeout(settleTimer)
+  start()
+}
+
+function checkRelease() {
+  if (!held) return
+  clearTimeout(settleTimer)
+  settleTimer = setTimeout(() => {
+    if (!fetchingVoice && !speaking) releaseMusic()
+  }, SETTLE_MS)
+}
+
+/** Called by the voice while it is downloading clips ahead. */
+export function setFetchingVoice(value) {
+  fetchingVoice = value
+  checkRelease()
+}
+
 // Whether a tune may play with the switches as they are.
 const allowed = (name) => soundOn && (musicOn || TRACKS[name].always)
 
@@ -68,6 +103,11 @@ function fade() {
 
 function start() {
   if (playing || !wanted || !allowed(wanted) || typeof Audio === 'undefined') return
+  if (held) {
+    if (!holdTimer) holdTimer = setTimeout(releaseMusic, MAX_HOLD)
+    checkRelease()
+    return
+  }
   const audio = new Audio(import.meta.env.BASE_URL + TRACKS[wanted].file)
   audio.loop = true
   audio.volume = 0
@@ -104,6 +144,7 @@ export function setSpeaking(value) {
     unduck = setTimeout(() => {
       speaking = false
       if (playing) fade()
+      checkRelease()
     }, UNDUCK_AFTER)
   }
 }
