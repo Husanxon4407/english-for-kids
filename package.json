@@ -10,7 +10,7 @@
     "voice": "node scripts/generate-voice.mjs",
     "voice:uz": "node scripts/generate-voice-uz.mjs",
     "voice:story": "node scripts/generate-voice-story.mjs",
-    "deploy": "vite build && gh-pages -d dist --nojekyll"
+    "deploy": "vite build && node scripts/deploy.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",
