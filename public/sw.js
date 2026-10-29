@@ -22,7 +22,9 @@ self.addEventListener('fetch', (event) => {
 async function page(request) {
   const cache = await caches.open(CACHE)
   const saved = (await cache.match(request, { ignoreSearch: true })) || (await cache.match(new URL('./', self.registration.scope).href))
-  const fresh = fetch(request).then((response) => {
+  // `no-cache`: always ask the server, since GitHub Pages lets the browser
+  // keep the page for ten minutes and a new version would wait that long.
+  const fresh = fetch(request.url, { cache: 'no-cache' }).then((response) => {
     if (response.ok) cache.put(new URL('./', self.registration.scope).href, response.clone())
     return response
   })
