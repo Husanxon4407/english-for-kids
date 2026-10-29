@@ -21,6 +21,9 @@ export default function Shelf({ entries, kind, prompt, badge, onBack, onHome, on
   }, [])
 
   const cols = entries.length > 6 ? 5 : 3
+  // More than two rows can't fit on a laptop screen at any useful size, so a
+  // long shelf scrolls instead.
+  const fits = entries.length <= cols * 2
 
   async function open(entry) {
     await speak(SCRIPT.title(entry))
@@ -34,12 +37,17 @@ export default function Shelf({ entries, kind, prompt, badge, onBack, onHome, on
         <Mascot size="sm" talking={speaking} onClick={() => speak(prompt)} />
       </TopBar>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center p-4 sm:p-6 low:py-2 short:px-4 short:py-2">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center p-4 sm:p-6 low:py-2 short:px-4 short:py-2">
         {/* Three across on a tablet or laptop (five when the shelf is full), sized
-            so that every row fits on the screen. */}
+            so that every row fits on the screen when there are only two rows. A
+            long shelf scrolls, five across on a tablet and six on a laptop. */}
         <div
-          className="mx-auto flex w-full flex-wrap justify-center gap-4 sm:max-w-[min(60rem,calc(((var(--room)-1.5rem)/var(--rows)-8.5rem)*var(--cols)+(var(--cols)-1)*1.5rem))] sm:gap-6 short:max-w-none short:gap-4"
-          style={{ '--cols': cols, '--rows': Math.ceil(entries.length / cols) }}
+          className={`mx-auto flex w-full flex-wrap justify-center gap-4 sm:gap-6 short:max-w-none short:gap-4 ${
+            fits
+              ? 'sm:max-w-[min(60rem,calc(((var(--room)-1.5rem)/var(--rows)-8.5rem)*var(--cols)+(var(--cols)-1)*1.5rem))]'
+              : '[--cols:5] sm:max-w-[60rem] lg:max-w-[72rem] lg:[--cols:6]'
+          }`}
+          style={fits ? { '--cols': cols, '--rows': Math.ceil(entries.length / cols) } : undefined}
         >
           {entries.map((entry, i) => (
             <button
